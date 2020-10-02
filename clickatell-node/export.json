@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "5f7023a523524d26d4da1fd6"
+  },
+  "name": "Kaliakra Superior",
+  "hotelId": "KALS01",
+  "resortId": "ALB"
+},{
+  "_id": {
+    "$oid": "5f7023a523524d26d4da1fd7"
+  },
+  "name": "Laguna Beach",
+  "hotelId": "LGBA01",
+  "resortId": "ALB"
+},{
+  "_id": {
+    "$oid": "5f7023a523524d26d4da1fd8"
+  },
+  "name": "Havana",
+  "hotelId": "HAVG",
+  "resortId": "GOLS"
+},{
+  "_id": {
+    "$oid": "5f7024c723524d26d4da1fd9"
+  },
+  "name": "Bansko SPA",
+  "resortId": "BAN",
+  "hotelId": "BANSP"
+},{
+  "_id": {
+    "$oid": "5f7025a923524d26d4da1fda"
+  },
+  "name": "Berlin Golden Beach",
+  "hotelId": "BRLGB",
+  "resortId": "GOLS"
+}]

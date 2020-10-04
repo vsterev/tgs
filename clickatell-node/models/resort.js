@@ -1,12 +1,21 @@
 const mongoose = require('mongoose');
 const resortSchema = new mongoose.Schema({
   _id: {
-    type: String,
+    type: Number,
     required: true,
   },
   name: {
     type: String,
     required: true,
+  },
+  regionId: {
+    type: String,
+  },
+  countryId: {
+    type: String,
+  },
+  code: {
+    type: String,
   },
   // resortId: {
   //   type: String,

@@ -15,4 +15,13 @@ module.exports = {
         });
     },
   },
+  post: {
+    create: (req, res) => {
+      const { _id, name, regionId, countryId, code } = req.body;
+      resortModel
+        .create({ _id, name, regionId, countryId, code })
+        .then((data) => res.status(200).json(data))
+        .catch((err) => console.log(err));
+    },
+  },
 };

@@ -3,3 +3,4 @@ stage.js
 .DS_Store
 package-lock.json
 .history
+./history

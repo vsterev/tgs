@@ -85,9 +85,14 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
+  const searchRep = () => {
+    null;
+  };
   return (
     <React.Fragment>
+      <form onSubmit={searchRep}>
+        <input type="text" id="nameRep" />
+      </form>
       <form onSubmit={submitForm}>
         {Object.entries(hotels).map((data) => {
           const resort = data[0];

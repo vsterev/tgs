@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-const Hotels = ({ hotels, repId }) => {
+const Hotels = ({ hotels }) => {
   const [visible, setVisible] = useState(false);
   const reduced = hotels.reduce((acc, curr) => {
     acc[curr.resortId.name] = [...(acc[curr.resortId.name] || []), curr.name];
@@ -31,7 +30,7 @@ const Hotels = ({ hotels, repId }) => {
             </div>
           );
         })}
-      {visible && <Link to={`/admin/reps/add-hotel/${repId}`}>edit hotels</Link>}
+      {visible && <button>edit hotels</button>}
     </div>
   );
 };

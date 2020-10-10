@@ -3,58 +3,72 @@ import Hotel from './shared/hotel';
 import repsService from '../../../services/reps';
 import parseCookie from '../../../utils/parseCookie';
 import hotelsService from '../../../services/hotels';
-import bindHotelsToRep from '../../../functions/bindHotelsToRep';
-import { useParams } from 'react-router-dom';
-
+const hotelsArr = [
+  { id: 1, name: 'Laguna Beach', checked: false, resort: 'Albena' },
+  { id: 2, name: 'Havana', checked: false, resort: 'Golden Sands' },
+  { id: 3, name: 'Flamingo', checked: true, resort: 'Albena' },
+  { id: 4, name: 'Paradise Beach', checked: false, resort: 'Golden Sands' },
+  //   {"_id": 1464,"name": "Laguna Beach Albena","resortId": {"_id": 14,"name": "Albena"}}]
+];
+const repId = '5f777f0897c68b03f095ddaa';
 const token = parseCookie('tgs-token');
 const Test = (props) => {
+  //   const [hotels, setHotels] = useState(hotelsArr);
   const [hotels, setHotels] = useState([]);
   const [err, setErr] = useState(null);
-  const { repId } = useParams();
   //   const [hotelsRep, setHotelsRep] = useState([]);
   //   const [allHotels, setAllHotels] = useState([]);
+  //   console.log(allHotels);
   const rep = 0;
   useEffect(() => {
-    // const allHotels = await hotelsService.listAll();
-    // console.warn(allHotels);
-
     Promise.all([hotelsService.listAll(), repsService.getHotelsByRep(repId, token)]).then(([allHotels, repsHotel]) => {
       if (allHotels.status & repsHotel.status) {
         //   setAllHotels(allHotels.hotels);
         //   setHotelsRep(repsHotel.hotels);
-        bindHotelsToRep(allHotels.hotels, repsHotel.hotels, setHotels);
+        checked(allHotels.hotels, repsHotel.hotels);
         return;
       }
+      console.log(repsHotel.msg || allHotels.msg);
       setErr(repsHotel.msg);
+      // return;
     });
   }, []);
 
   //sort, reduce to group array and ass flag checked
-  // function checked(ha, hr) {
-  //   const hotelsRepArray = [...hr].map((a) => a._id);
-  //   const checkedRepHotels = [...ha]
-  //     .sort((a, b) => {
-  //       if (a.resortId.name === b.resortId.name) {
-  //         return a.name.localeCompare(b.name.localeCompare);
-  //       } else {
-  //         return a.resortId.name.localeCompare(b.resortId.name);
-  //       }
-  //     })
-  //     .map((a) => {
-  //       if (hotelsRepArray.includes(a._id)) {
-  //         return { ...a, checked: true };
-  //       } else {
-  //         return { ...a, checked: false };
-  //       }
-  //     })
-  //     .reduce((acc, curr) => {
-  //       acc[curr.resortId.name] = [...(acc[curr.resortId.name] || []), curr];
-  //       return acc;
-  //     }, {});
-  //   setHotels(checkedRepHotels);
-  //   console.log(checkedRepHotels);
-  // }
+  function checked(ha, hr) {
+    const hotelsRepArray = [...hr].map((a) => a._id);
+    const checkedRepHotels = [...ha]
+      .sort((a, b) => {
+        if (a.resortId.name === b.resortId.name) {
+          return a.name.localeCompare(b.name.localeCompare);
+        } else {
+          return a.resortId.name.localeCompare(b.resortId.name);
+        }
+      })
+      .map((a) => {
+        if (hotelsRepArray.includes(a._id)) {
+          return { ...a, checked: true };
+        } else {
+          return { ...a, checked: false };
+        }
+      })
+      .reduce((acc, curr) => {
+        acc[curr.resortId.name] = [...(acc[curr.resortId.name] || []), curr];
+        return acc;
+      }, {});
+    setHotels(checkedRepHotels);
+    console.log(checkedRepHotels);
+  }
+  function updateHotels(htl, i) {
+    // console.log(htl);
+    const temp = { ...hotels };
+    const resort = htl.resortId.name;
+    // temp[resort][i].checked = !htl.resortId.name[i].checked;
+    temp[resort][i].checked = !temp[resort][i].checked;
+    // setHotels(temp);
+  }
   const updHtls = (resort, tmp) => {
+    // console.log('Resort', resort, 'tmp', tmp);
     const temp = { ...hotels };
     temp[resort] = [...tmp]; //masiva e bil problema
     setHotels(temp);
@@ -85,7 +99,6 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
   return (
     <React.Fragment>
       <form onSubmit={submitForm}>
@@ -99,15 +112,32 @@ const Test = (props) => {
                 {resort.toUpperCase()} - {countChecked(hotelsInResort).checked} from {countChecked(hotelsInResort).all}{' '}
                 hotels selected
               </div>
+              {/* {hotelsInResort.map((htl, i) => { */}
+              {/* // return <div key={i}>-- {htl.name}</div>; */}
+              {/* return ( */}
+              {/* <div key={htl._id}> */}
+              {/* {console.log(i)} */}
+              {/* <Hotel htl={htl} set={updateHotels(htl, i)} /> */}
+              {/* </div> */}
+              {/* //     ); */}
+              {/* //   })} */}
 
               <Hotel hotels={hotelsInResort} updHtls={(resort, t) => updHtls(resort, t)} resort={resort} />
             </div>
           );
         })}
+        {/* {hotels.map((hotel, i) => {
+          return (>
+            <div key={i}>
+              <Hotel htl={hotel} i={i} set={() => updateHotels(i)} />
+            </div>
+          );
+        })} */}
         <button type="submit">Add hotels</button>
       </form>
       {(!hotels || hotels.length === 0) && <div>Loading ....</div>}
-      {!!err && <div>{err.message}</div>}
+      {!!err && <div>{err.msg}</div>}
+      {/* {hotels.length !== 0 && JSON.stringify(hotels)} */}
     </React.Fragment>
   );
 };

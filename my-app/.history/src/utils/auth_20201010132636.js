@@ -29,7 +29,7 @@ const Auth = (props) => {
       .verify(token)
       .then((res) => {
         // console.log(res);
-        if (res.status) {
+        if (!!res.status) {
           logIn(res.userData);
           return;
         }

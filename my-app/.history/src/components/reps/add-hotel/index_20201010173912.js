@@ -25,7 +25,9 @@ const Test = (props) => {
         bindHotelsToRep(allHotels.hotels, repsHotel.hotels, setHotels);
         return;
       }
+      // console.log(repsHotel.msg || allHotels.msg);
       setErr(repsHotel.msg);
+      // return;
     });
   }, []);
 
@@ -85,7 +87,6 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
   return (
     <React.Fragment>
       <form onSubmit={submitForm}>

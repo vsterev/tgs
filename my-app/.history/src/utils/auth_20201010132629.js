@@ -29,12 +29,12 @@ const Auth = (props) => {
       .verify(token)
       .then((res) => {
         // console.log(res);
-        if (res.status) {
+        if (!!res.status) {
           logIn(res.userData);
           return;
         }
         logOut();
-        // return;
+        return;
       })
       .catch((err) => console.log(err));
   }, []);

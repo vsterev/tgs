@@ -31,7 +31,7 @@ const RepsAll = () => {
               <div key={i}>{hotel.name}</div>
                 
             ))} */}
-            <Hotels hotels={rep.hotels} repId={rep._id} />
+            <Hotels hotels={rep.hotels} />
           </div>
         );
       })}

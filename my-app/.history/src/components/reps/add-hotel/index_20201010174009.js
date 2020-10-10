@@ -85,7 +85,6 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
   return (
     <React.Fragment>
       <form onSubmit={submitForm}>

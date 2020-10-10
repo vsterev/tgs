@@ -3,14 +3,17 @@ import Hotel from './shared/hotel';
 import repsService from '../../../services/reps';
 import parseCookie from '../../../utils/parseCookie';
 import hotelsService from '../../../services/hotels';
-import bindHotelsToRep from '../../../functions/bindHotelsToRep';
-import { useParams } from 'react-router-dom';
 
+const repId = '5f777f0897c68b03f095ddaa';
 const token = parseCookie('tgs-token');
 const Test = (props) => {
   const [hotels, setHotels] = useState([]);
+
+  setHotels(['h1', 'h2']);
+  console.error(hotels);
+  // return;
+
   const [err, setErr] = useState(null);
-  const { repId } = useParams();
   //   const [hotelsRep, setHotelsRep] = useState([]);
   //   const [allHotels, setAllHotels] = useState([]);
   const rep = 0;
@@ -22,38 +25,40 @@ const Test = (props) => {
       if (allHotels.status & repsHotel.status) {
         //   setAllHotels(allHotels.hotels);
         //   setHotelsRep(repsHotel.hotels);
-        bindHotelsToRep(allHotels.hotels, repsHotel.hotels, setHotels);
+        checked(allHotels.hotels, repsHotel.hotels);
         return;
       }
+      // console.log(repsHotel.msg || allHotels.msg);
       setErr(repsHotel.msg);
+      // return;
     });
   }, []);
 
   //sort, reduce to group array and ass flag checked
-  // function checked(ha, hr) {
-  //   const hotelsRepArray = [...hr].map((a) => a._id);
-  //   const checkedRepHotels = [...ha]
-  //     .sort((a, b) => {
-  //       if (a.resortId.name === b.resortId.name) {
-  //         return a.name.localeCompare(b.name.localeCompare);
-  //       } else {
-  //         return a.resortId.name.localeCompare(b.resortId.name);
-  //       }
-  //     })
-  //     .map((a) => {
-  //       if (hotelsRepArray.includes(a._id)) {
-  //         return { ...a, checked: true };
-  //       } else {
-  //         return { ...a, checked: false };
-  //       }
-  //     })
-  //     .reduce((acc, curr) => {
-  //       acc[curr.resortId.name] = [...(acc[curr.resortId.name] || []), curr];
-  //       return acc;
-  //     }, {});
-  //   setHotels(checkedRepHotels);
-  //   console.log(checkedRepHotels);
-  // }
+  function checked(ha, hr) {
+    const hotelsRepArray = [...hr].map((a) => a._id);
+    const checkedRepHotels = [...ha]
+      .sort((a, b) => {
+        if (a.resortId.name === b.resortId.name) {
+          return a.name.localeCompare(b.name.localeCompare);
+        } else {
+          return a.resortId.name.localeCompare(b.resortId.name);
+        }
+      })
+      .map((a) => {
+        if (hotelsRepArray.includes(a._id)) {
+          return { ...a, checked: true };
+        } else {
+          return { ...a, checked: false };
+        }
+      })
+      .reduce((acc, curr) => {
+        acc[curr.resortId.name] = [...(acc[curr.resortId.name] || []), curr];
+        return acc;
+      }, {});
+    setHotels(checkedRepHotels);
+    console.log(checkedRepHotels);
+  }
   const updHtls = (resort, tmp) => {
     const temp = { ...hotels };
     temp[resort] = [...tmp]; //masiva e bil problema
@@ -85,7 +90,6 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
   return (
     <React.Fragment>
       <form onSubmit={submitForm}>

@@ -3,14 +3,13 @@ import Hotel from './shared/hotel';
 import repsService from '../../../services/reps';
 import parseCookie from '../../../utils/parseCookie';
 import hotelsService from '../../../services/hotels';
-import bindHotelsToRep from '../../../functions/bindHotelsToRep';
-import { useParams } from 'react-router-dom';
-
+import sortHotels from '../../../functions/sortHotels';
+const repId = '5f777f0897c68b03f095ddaa';
 const token = parseCookie('tgs-token');
 const Test = (props) => {
   const [hotels, setHotels] = useState([]);
+
   const [err, setErr] = useState(null);
-  const { repId } = useParams();
   //   const [hotelsRep, setHotelsRep] = useState([]);
   //   const [allHotels, setAllHotels] = useState([]);
   const rep = 0;
@@ -22,10 +21,12 @@ const Test = (props) => {
       if (allHotels.status & repsHotel.status) {
         //   setAllHotels(allHotels.hotels);
         //   setHotelsRep(repsHotel.hotels);
-        bindHotelsToRep(allHotels.hotels, repsHotel.hotels, setHotels);
+        sortHotels(allHotels.hotels, repsHotel.hotels);
         return;
       }
+      // console.log(repsHotel.msg || allHotels.msg);
       setErr(repsHotel.msg);
+      // return;
     });
   }, []);
 
@@ -85,7 +86,6 @@ const Test = (props) => {
       console.log(a.msg);
     });
   };
-
   return (
     <React.Fragment>
       <form onSubmit={submitForm}>

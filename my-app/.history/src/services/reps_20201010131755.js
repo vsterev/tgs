@@ -15,7 +15,7 @@ const repsService = {
       headers: { Authorization: token },
     })
       .then((res) => res.json())
-      .catch((e) => console.error(e));
+      .catch((e) => console.error('vasko', e));
   },
   repUpdate: (data, token) => {
     return fetch(`http://localhost:4000/rep/update`, {

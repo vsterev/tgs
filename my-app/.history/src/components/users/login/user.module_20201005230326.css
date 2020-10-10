@@ -1,0 +1,26 @@
+form {
+  margin: 140px auto;
+}
+input,
+label,
+button {
+  display: inline-block;
+  width: 65%;
+  height: 25px;
+}
+input button {
+  background: rgb(54, 187, 54);
+  border-radius: 4px;
+  padding: 6px 14px;
+  color: white;
+}
+button:hover {
+  cursor: pointer;
+  background: rgb(110, 233, 110);
+  color: black;
+}
+button:disabled {
+  background: rgb(148, 158, 148);
+  color: grey;
+  cursor: no-drop;
+}

@@ -37,14 +37,7 @@ module.exports = {
           });
         })
         .catch((err) => {
-          if (
-            [
-              'invalid token',
-              'token expired',
-              'blacklisted token',
-              'jwt must be provided',
-            ].includes(err.message)
-          ) {
+          if (['invalid token', 'token expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
             res.status(401).json({ status: false, error: 'UNAUTHORIZED!' });
             return;
           }
@@ -60,21 +53,14 @@ module.exports = {
         .then((userData) => {
           if (!userData) {
             // res.render('login', { errors: { email: `This user ${email} not exist!` } });
-            res
-              .status(401)
-              .json({ status: false, msg: `The user ${email} not exist!` });
+            res.status(401).json({ status: false, msg: `The user ${email} not exist!` });
             return;
           }
-          const match = Promise.all([
-            userData,
-            userData.matchPassword(password),
-          ]) //promise in promise - mot nested
+          const match = Promise.all([userData, userData.matchPassword(password)]) //promise in promise - mot nested
             .then(([userData, match]) => {
               if (!match) {
                 // res.render('login', { errors: { password: 'Password mismatch!' } });
-                res
-                  .status(401)
-                  .json({ status: false, msg: 'Password mismatch!' });
+                res.status(401).json({ status: false, msg: 'Password mismatch!' });
                 return;
               }
               req.user = userData;
@@ -139,9 +125,7 @@ module.exports = {
         })
         .then(([user, match]) => {
           if (!match) {
-            res
-              .status(401)
-              .json({ status: false, msg: "Old Password doesn't correct" });
+            res.status(401).json({ status: false, msg: "Old Password doesn't correct" });
             return;
           }
           return userModel.findByIdAndUpdate(user.id, { password });

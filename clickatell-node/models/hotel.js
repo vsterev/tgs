@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const hotelSchema = new mongoose.Schema({
   _id: {
-    type: String,
+    type: Number,
     required: true,
   },
   name: {
@@ -13,6 +13,15 @@ const hotelSchema = new mongoose.Schema({
     ref: 'Resort', //pravi vryzka kym drugata kolekcia, v neya _id===resrortId
     // foreignField: 'resID',
     // justOne: true,
+  },
+  code: {
+    type: String,
+  },
+  category: {
+    type: String,
+  },
+  regionId: {
+    type: String,
   },
 });
 module.exports = mongoose.model('Hotel', hotelSchema);

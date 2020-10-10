@@ -4,35 +4,33 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please enter your Name'],
-    match: [
-      /^[a-zA-Z ]{5,}$/,
-      'Name should contains minimum 5 english letters',
-    ],
+    match: [/^[a-zA-Z ]{5,}$/, 'Name should contains minimum 5 english letters'],
   },
   email: {
     type: String,
     required: [true, 'Please enter an email !'],
     unique: [true, 'User/email already exists !'],
-    validate: [
-      {
-        validator: (v) => {
-          // return /^[a-zA-Z0-9@.]{5,}$/.test(v);
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-            v
-          );
-          return;
-        },
-        message: (props) => `${props.value} is not a valid email`,
-      },
+    match: [
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Not valid email!',
     ],
+    // validate: [
+    //   {
+    //     validator: (v) => {
+    //       // return /^[a-zA-Z0-9@.]{5,}$/.test(v);
+    //       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    //         v
+    //       );
+    //       return;
+    //     },
+    //     message: (props) => `${props.value} is not a valid email`,
+    //   },
+    // ],
   },
   password: {
     type: String,
     required: [true, 'Please enter password!'],
-    match: [
-      /^[a-zA-Z0-9]{5,}$/,
-      'Password should contains minimum 5 digits from numbers or letters',
-    ],
+    match: [/^[a-zA-Z0-9]{5,}$/, 'Password should contains minimum 5 digits from numbers or letters'],
   },
   // likes: [{ type: mongoose.Types.ObjectId, ref: 'Villa' }],
   // villas: [{ type: mongoose.Types.ObjectId, ref: 'Villa' }],
@@ -69,9 +67,7 @@ userSchema.pre('findOneAndUpdate', function (next) {
     saltGenerate
       .then((salt) => {
         if (!/^[a-zA-Z0-9]{5,}$/.test(this._update['password'])) {
-          return Promise.reject(
-            'Password should contains minimum 5 digits from numbers or letters'
-          );
+          return Promise.reject('Password should contains minimum 5 digits from numbers or letters');
         }
         const hash = bcrypt.hash(this._update['password'], salt);
         return Promise.all([salt, hash]);

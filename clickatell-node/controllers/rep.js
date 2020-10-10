@@ -7,7 +7,15 @@ module.exports = {
       //   const user = req.user;
       repModel
         .find()
-        .populate([{ path: 'hotels', model: 'Hotel', select: 'name' }])
+        // .populate([{ path: 'hotels', model: 'Hotel', select: 'name' }])
+        .populate([
+          {
+            path: 'hotels',
+            model: 'Hotel',
+            select: 'name',
+            populate: { path: 'resortId', model: 'Resort', select: 'name' },
+          },
+        ])
         .then((reps) => {
           res.status(200).json({ status: true, reps });
         })
@@ -21,6 +29,14 @@ module.exports = {
       const { repId } = req.params;
       repModel
         .findById(repId)
+        .populate([
+          {
+            path: 'hotels',
+            model: 'Hotel',
+            select: 'name',
+            populate: { path: 'resortId', model: 'Resort', select: 'name' },
+          },
+        ])
         .then((result) => {
           res.status(200).json({ status: true, hotels: result.hotels });
         })

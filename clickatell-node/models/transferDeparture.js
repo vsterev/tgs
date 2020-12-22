@@ -19,6 +19,9 @@ const transferDepartureSchema = new mongoose.Schema({
   checkPoint: {
     type: String,
   },
+  trenasferInfo: {
+    type: String,
+  },
   time: {
     type: String,
   },

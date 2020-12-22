@@ -7,6 +7,7 @@ router.get('/all', auth(), repController.get.all);
 router.get('/all-hotels', auth(), repController.get.allHotels);
 router.get('/hotels-get/:repId', auth(), repController.get.allHotelsByRep);
 router.post('/add', auth(), repController.post.add);
+router.get('/details/:repId', auth(), repController.get.repDetails);
 // router.post('/hotels-update', auth(), repController.post.hotelsUpdate);
 router.post('/update', auth(), repController.post.update);
 router.post('/delete', auth(), repController.post.delete);

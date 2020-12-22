@@ -36,6 +36,15 @@ const contactSchema = new mongoose.Schema({
   hasTransfer: {
     type: Boolean,
   },
+  time: {
+    type: String,
+  },
+  comment: {
+    type: String,
+  },
+  sendedMsg: {
+    type: String,
+  },
   //   users: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
   //   creatorId: { type: mongoose.Types.ObjectId, ref: 'User' },
 });

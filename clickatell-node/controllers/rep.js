@@ -24,6 +24,19 @@ module.exports = {
           console.error(err);
         });
     },
+    repDetails: (req, res) => {
+      const { repId } = req.params;
+      console.log(JSON.stringify(repId));
+      repModel
+        .findById(repId)
+        .then((result) => {
+          res.status(200).json({ status: true, result });
+        })
+        .catch((err) => {
+          res.status(404).json({ status: false, msg: err });
+          console.error(err);
+        });
+    },
     allHotelsByRep: (req, res) => {
       //   const user = req.user;
       const { repId } = req.params;

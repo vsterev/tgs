@@ -1,6 +1,8 @@
 const { contactModel, repModel } = require('../models');
 const sendMes = require('../api/newServ');
 const sendEmail = require('../utils/sendMail');
+const { reject } = require('bluebird');
+const hotel = require('../models/hotel');
 module.exports = {
   get: {
     all: (req, res) => {
@@ -40,6 +42,21 @@ module.exports = {
           res.status(404).json({ status: false, msg: err });
           console.error(err);
         });
+    },
+    getAllWatingTransfer: (req, res) => {
+      const { date } = req.params;
+      contactModel
+        .find({ time: undefined, hasTransfer: true, checkOut: date })
+        .populate({
+          path: 'hotelId',
+          model: 'Hotel',
+          // options: { sort: { name: 1 } },
+          select: 'name',
+          populate: { path: 'resortId', model: 'Resort', select: 'name' },
+        })
+        .sort({ hotelId: 1 })
+        .then((rs) => res.status(200).json(rs))
+        .catch((err) => res.status(400).json(err));
     },
     checkInMessage: (req, res) => {
       const { date } = req.params;
@@ -94,6 +111,12 @@ module.exports = {
           console.error(err);
         });
     },
+    testIncludeArr: (req, res) => {
+      contactModel
+        .updateMany({ hotelId: { $in: ['1464', '1907'] } }, { hasTransfer: true })
+        .then((rs) => res.status(200).json(rs))
+        .catch((err) => res.status(400).json(err));
+    },
   },
   post: {
     addComment: (req, res) => {
@@ -113,6 +136,70 @@ module.exports = {
       //       res.status(404).json({ status: false, msg: err });
       //       console.error(err);
       //     });
+    },
+    update: (req, res) => {
+      const user = req.user;
+      const { reservations, time, comment } = req.body;
+      updateObj = {};
+      if (time) {
+        updateObj.time = time;
+      }
+      if (comment) {
+        updateObj.comment = comment;
+      }
+      console.log(reservations, updateObj);
+      msgSuccess = '';
+      msgError = '';
+      reservations.forEach((reservationId, id) => {
+        contactModel
+          .findOneAndUpdate({ resId: reservationId }, updateObj, { new: true })
+          .then((upd) => {
+            res.json(upd);
+          })
+          .catch((err) => console.log(err));
+      });
+      // return new Promise((resolve, reject) => {
+      //   if (msgError) {
+      //     return reject(msgError);
+      //   }
+      //   resolve(msgSuccess);
+      // })
+      //   .then((success) => console.log(success))
+      //   .catch((err) => console.log(err));
+    },
+    updateMany: (req, res) => {
+      const { hotelId, flightDeparture, checkOut, resId, time, comment } = req.body;
+      const updateObj = {};
+      const searchContact = {};
+      if (time) {
+        updateObj.time = time;
+      }
+      if (comment) {
+        updateObj.comment = comment;
+      }
+      if (hotelId) {
+        searchContact.hotelId = hotelId;
+      }
+      if (flightDeparture) {
+        searchContact.flightDeparture = flightDeparture;
+      }
+      if (checkOut) {
+        searchContact.checkOut = checkOut;
+      }
+      if (resId) {
+        searchContact.resId = resId;
+      }
+      contactModel
+        .updateMany(searchContact, updateObj)
+        .then((upd) => res.status(200).json(`updated ${upd.nModified} from ${upd.n} matches`))
+        .catch((err) => res.status(400).json(err));
+    },
+    updataArrayContacts: (req, res) => {
+      const { reservations, time, comment } = req.body;
+      contactModel
+        .updateMany({ resId: { $in: reservations }, hasTransfer: true }, { time, comment })
+        .then((upd) => res.status(200).json(`updated ${upd.nModified} from ${upd.n} matches`))
+        .catch((err) => res.status(400).json(err));
     },
   },
 };

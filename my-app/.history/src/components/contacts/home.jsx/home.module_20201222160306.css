@@ -1,0 +1,12 @@
+div.title {
+  color: red;
+}
+table {
+  color: blue;
+  border: 1px solid beige;
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid red;
+  border-collapse: collapse;
+}

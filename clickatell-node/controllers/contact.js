@@ -201,5 +201,44 @@ module.exports = {
         .then((upd) => res.status(200).json(`updated ${upd.nModified} from ${upd.n} matches`))
         .catch((err) => res.status(400).json(err));
     },
+    checkOut: (req, res) => {
+      const { date, flight, hasTransfer, hotelId } = req.body;
+      let searchStr = {};
+      if (date) {
+        searchStr = { ...searchStr, checkOut: date };
+      }
+      if (flight) {
+        searchStr = { ...searchStr, flightDeparture: flight };
+      }
+      if (hasTransfer !== 'all') {
+        searchStr = { ...searchStr, hasTransfer: hasTransfer };
+      }
+      if (hotelId) {
+        searchStr = { ...searchStr, hotelId };
+      }
+      console.log(searchStr);
+      contactModel
+        .find(searchStr)
+        .populate({
+          path: 'hotelId',
+          model: 'Hotel',
+          populate: { path: 'resortId', model: 'Resort', select: 'name' },
+        })
+        .then((contacts) => {
+          res.status(200).json(contacts);
+          //   contacts.map((user) =>
+          //     sendMes(
+          //       `Welcome to Bulgaria ${user.name}.Solvex is your DMC - please visit https://www.solvex.bg/${user.resId} for more info.Travel with smile :-).
+          //     Your checkout date is ${user.checkOut}`,
+          //       user.phone,
+          //       'sms'
+          //     )
+          //   );
+        })
+        .catch((err) => {
+          res.status(404).json(err);
+          console.error(err);
+        });
+    },
   },
 };

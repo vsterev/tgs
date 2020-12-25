@@ -1,0 +1,16 @@
+div.title {
+  color: red;
+}
+table {
+  color: blue;
+  border-collapse: collapse;
+  border: 1px solid red;
+}
+td,
+th {
+  border-bottom: 1px solid red;
+  border-collapse: collapse;
+}
+tr:nth-child(even) {
+  background-color: beige;
+}

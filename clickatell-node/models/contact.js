@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const hotelSchema = require('./hotel');
 const contactSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -13,6 +14,7 @@ const contactSchema = new mongoose.Schema({
     type: String,
     ref: 'Hotel',
   },
+  // hotelId: [hotelSchema],
   checkIn: {
     type: String,
     required: true,

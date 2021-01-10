@@ -77,9 +77,9 @@ module.exports = {
   post: {
     add: (req, res) => {
       //   const user = req.user;
-      const { firstName, familyName, phone, photo } = req.body;
+      const { firstName, familyName, phone, photo, languages } = req.body;
       repModel
-        .create({ firstName, familyName, phone, photo, hotels: [] })
+        .create({ firstName, familyName, phone, photo, languages, hotels: [] })
         .then((added) => {
           res.status(200).json({ status: true, msg: 'Rep is added' });
         })
@@ -92,7 +92,7 @@ module.exports = {
       //   const user = req.user;
       const updateObj = {};
 
-      const { repId, firstName, familyName, phone, photo, hotels } = req.body;
+      const { repId, firstName, familyName, phone, photo, hotels, languages } = req.body;
       if (!repId) {
         return res.status(404).json('Invalid request - please enter repId.');
       }
@@ -110,6 +110,9 @@ module.exports = {
       }
       if (hotels && hotels.length !== 0) {
         updateObj.hotels = hotels;
+      }
+      if (languages && languages.length !== 0) {
+        updateObj.languages = languages;
       }
       repModel
         .findByIdAndUpdate(repId, updateObj, { new: true, runValidators: true })

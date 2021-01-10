@@ -6,7 +6,7 @@ const Logout = () => {
   const history = useHistory();
   useEffect(() => {
     logOut();
-    history.push('/login');
+    history.push('/admin/login');
   }, []);
   return null;
 };

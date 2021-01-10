@@ -6,7 +6,7 @@ const MOCK = [
     hotel: 'Laguna Beach',
     checkIn: '15.07.2020',
     checkOut: '22.07.2020',
-    phone: '359888340639',
+    phone: '3598885999189',
   },
   {
     name: 'Ivan Draganov',
@@ -15,7 +15,7 @@ const MOCK = [
     hotel: 'Havana',
     checkIn: '15.07.2020',
     checkOut: '19.07.2020',
-    phone: '359888340639',
+    phone: '3598885999189',
   },
   {
     name: 'Dragula Ionescu',

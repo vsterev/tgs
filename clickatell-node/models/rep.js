@@ -3,18 +3,12 @@ const repSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
-    match: [
-      /^[a-zA-Z ]{5,}$/,
-      'Name should contains minimum 5 english letters',
-    ],
+    match: [/^[a-zA-Z ]{5,}$/, 'Name should contains minimum 5 english letters'],
   },
   familyName: {
     type: String,
     required: true,
-    match: [
-      /^[a-zA-Z ]{5,}$/,
-      'Name should contains minimum 5 english letters',
-    ],
+    match: [/^[a-zA-Z ]{5,}$/, 'Name should contains minimum 5 english letters'],
   },
   phone: {
     type: String,
@@ -26,7 +20,10 @@ const repSchema = new mongoose.Schema({
     // required: [true, 'Please add one photo at least !'],
     match: [/^(https?)\:\/\/.*/, 'Image url should begins with http or https!'],
   },
-  hotels: [{ type:String, ref: 'Hotel' }],
+  languages: {
+    type: [String],
+  },
+  hotels: [{ type: String, ref: 'Hotel' }],
 });
 
 module.exports = mongoose.model('Rep', repSchema);

@@ -16,8 +16,9 @@ const sendMes = function (content, to, channel) {
     }),
     headers: {
       'Content-Type': 'application/json',
-      // Accept: 'application/json',
-      Authorization: 'vvD_nqhcQ6yPbkPk5Bzk9w==',
+      Accept: 'application/json',
+      // Authorization: 'vvD_nqhcQ6yPbkPk5Bzk9w==',
+      Authorization: 'jKTmxd7CQi2GVJKxMcx_ow==',
     },
   })
     .then((res) => res.json())

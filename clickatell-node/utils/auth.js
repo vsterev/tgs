@@ -10,10 +10,7 @@ function auth() {
       res.status(404).json({ status: false, msg: 'No token provided' });
       return;
     }
-    Promise.all([
-      jwt.verifyToken(token),
-      tokenBlacklistModel.findOne({ token }),
-    ])
+    Promise.all([jwt.verifyToken(token), tokenBlacklistModel.findOne({ token })])
       .then(([data, blackListToken]) => {
         if (blackListToken) {
           return Promise.reject(new Error('blacklisted token'));
@@ -28,20 +25,13 @@ function auth() {
         //     next();
         //     return;
         // }
-        if (
-          [
-            'token expired',
-            'blacklisted token',
-            'jwt must be provided',
-            'jwt malformed',
-          ].includes(err.message)
-        ) {
+        if (['token expired', 'blacklisted token', 'jwt must be provided', 'jwt malformed'].includes(err.message)) {
           // res.redirect('/user/login?error')
-          res.status(404).json({ status: false, msg: err });
+          res.status(404).json({ msg: err, redirect: true });
           console.log(err);
           return;
         }
-        res.status(404).json({ status: false, msg: err });
+        res.status(404).json({ msg: err });
         console.log(err);
       });
   };

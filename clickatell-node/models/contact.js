@@ -44,6 +44,9 @@ const contactSchema = new mongoose.Schema({
   comment: {
     type: String,
   },
+  firstSendMessage: {
+    type: String,
+  },
   sendedMsg: {
     type: String,
   },

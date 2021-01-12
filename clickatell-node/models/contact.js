@@ -47,9 +47,12 @@ const contactSchema = new mongoose.Schema({
   firstSendMessage: {
     type: String,
   },
-  sendedMsg: {
+  lastSendMessage: {
     type: String,
   },
+  // sendedMsg: {
+  //   type: String,
+  // },
   //   users: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
   //   creatorId: { type: mongoose.Types.ObjectId, ref: 'User' },
 });

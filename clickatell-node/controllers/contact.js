@@ -1,5 +1,5 @@
 const { contactModel, repModel } = require('../models');
-const { bulkSend } = require('../utils/bulk-sms');
+const { bulkSend, bulkSmsCheck } = require('../utils/bulk-sms');
 const { bulkSendMany } = require('../utils/bulk-sms');
 const sendMes = require('../api/newServ');
 const sendEmail = require('../utils/sendMail');
@@ -240,6 +240,83 @@ module.exports = {
         });
       // .catch((err) => console.log(err));
     },
+    checkOutMessageBulkSms2: (req, res) => {
+      const { date } = req.params;
+      contactModel
+        .find({
+          checkOut: date,
+          hasTransfer: true,
+          $and: [{ time: { $exists: true } }, { time: { $nin: [undefined, null, ''] } }],
+          $or: [
+            { lastSendMessage: { $exists: false } },
+            { lastSendMessage: null },
+            { lastSendMessage: '' },
+            { lastSendMessage: undefined },
+          ],
+        }) //send only to contacts that firstSendMessage is not defined
+        .populate('hotelId')
+        .lean()
+        .then((contacts) => {
+          console.log(contacts);
+          const contactHotels = contacts.map((contact) => {
+            return contact.hotelId._id;
+          });
+          const contactsRepsHotels = repModel.find({ hotels: { $in: contactHotels } }).lean();
+          return Promise.all([contacts, contactsRepsHotels]);
+        })
+        .then(([contacts, contactsRepsHotels]) => {
+          const contM = contacts.map((contact) => {
+            contact.reps = []; //addes property reps to each contact
+            contactsRepsHotels.filter((contactsRep) => {
+              if (contactsRep.hotels.includes(contact.hotelId._id.toString())) {
+                contact.reps = [...contact.reps, contactsRep];
+              }
+            });
+          });
+          const data = [];
+          const noPhones = [];
+          const noRepsAdded = [];
+          contacts.map((contact) => {
+            if ((contact.reps.length > 0) & !!contact.phone) {
+              const body = `Dear ${contact.name} - your departure date is ${contact.checkOut} the transfer time is at ${contact.time} h - ${contact.comment}. Your DMC Solvex wishes you a safe trip!  `;
+              const to = contact.phone;
+              data.push({ to, body });
+            } else if (contact.reps.length === 0) {
+              console.log(
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
+              );
+              noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
+            } else if (!contact.phone) {
+              console.log(
+                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
+              );
+              noPhones.push(contact.resId);
+            }
+          });
+          console.log(data);
+          sendEmail(
+            'TGS - Error sending SMS via Bulk',
+            `You receive this message, because there are reservation that have not receive SMS welcome noifications.
+            Hotels: ${noRepsAdded.join(', ')} have not reps attached. \n
+            Reservations: ${noPhones.join(', ')} have not phone attached. \n
+            Tourists from this reservation and hotels will not receive messages from Travel Guide System! \n Please fill phones or add rep in the system and resend message.`,
+            ['vasil@solvex.bg']
+          );
+          bulkSendMany(data)
+            .then((result) => {
+              if (Array.isArray(result))
+                result.map((rs) => {
+                  contactModel
+                    .findOneAndUpdate({ phone: rs.to, checkOut: date }, { lastSendMessage: rs.id }, { new: true })
+                    .then(console.log)
+                    .catch(console.log);
+                });
+            })
+            .catch((err) => console.log(err));
+          res.status(200).json({ contactsToSend: contacts.length, noPhones, noRepsAdded, dataSended: data.length });
+        });
+      // .catch((err) => console.log(err));
+    },
     checkIn: (req, res) => {
       const { date } = req.params;
       contactModel
@@ -328,6 +405,14 @@ module.exports = {
             noRepsAdded,
           });
         });
+    },
+    bulckMessageInfo: (req, res) => {
+      const { messageId } = req.params;
+      bulkSmsCheck(messageId)
+        .then((r) => {
+          res.status(200).json(r);
+        })
+        .catch((e) => res.status(400).json(e));
     },
   },
   post: {
@@ -428,7 +513,7 @@ module.exports = {
       if (hotelId) {
         searchStr = { ...searchStr, hotelId };
       }
-      console.log(searchStr);
+      // console.log(searchStr);
       contactModel
         .find(searchStr)
         .populate({
@@ -450,6 +535,21 @@ module.exports = {
         .catch((err) => {
           res.status(404).json(err);
           console.error(err);
+        });
+    },
+    checkIn: (req, res) => {
+      const { date } = req.body;
+      contactModel
+        .find({ checkIn: date })
+        .populate({
+          path: 'hotelId',
+          model: 'Hotel',
+          populate: { path: 'resortId', model: 'Resort', select: 'name' },
+        })
+        .then((contacts) => res.status(200).json(contacts))
+        .catch((e) => {
+          console.log(e);
+          res.status(404).json(e);
         });
     },
   },

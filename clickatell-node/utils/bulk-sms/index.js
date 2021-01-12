@@ -1,3 +1,4 @@
 const bulkSend = require('./send');
 const bulkSendMany = require('./send-many');
-module.exports = { bulkSend, bulkSendMany };
+const bulkSmsCheck = require('./check');
+module.exports = { bulkSend, bulkSendMany, bulkSmsCheck };

@@ -465,6 +465,7 @@ module.exports = {
       //   .catch((err) => console.log(err));
     },
     updateMany: (req, res) => {
+      //mislq che ne se polzva zameneno e s dolnoto
       const { hotelId, flightDeparture, checkOut, resId, time, comment } = req.body;
       const updateObj = {};
       const searchContact = {};
@@ -492,9 +493,11 @@ module.exports = {
         .catch((err) => res.status(400).json(err));
     },
     updataArrayContacts: (req, res) => {
+      //tova se polzwa
       const { reservations, time, comment } = req.body;
       contactModel
-        .updateMany({ resId: { $in: reservations }, hasTransfer: true }, { time, comment })
+        // .updateMany({ resId: { $in: reservations }, hasTransfer: true }, { time, comment })
+        .updateMany({ resId: { $in: reservations } }, { time, comment })
         .then((upd) => res.status(200).json(`updated ${upd.nModified} from ${upd.n} matches`))
         .catch((err) => res.status(400).json(err));
     },

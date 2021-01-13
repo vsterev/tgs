@@ -10,11 +10,9 @@ const ContactsTable = ({
   setContacts,
   type,
   setHotelsArr,
-  setHotelId,
   setFlightsArr,
   setFlight,
   setTransferArr,
-  setHasTransfer,
 }) => {
   const history = useHistory();
   const token = parseCookie('tgs-token');
@@ -203,16 +201,8 @@ const ContactsTable = ({
                   setContacts(cns);
                   const temp = await uniqueValFromArray(cns, 'flightDeparture');
                   setFlightsArr(temp);
-                  setTransferArr(uniqueValFromArray(cns, 'hasTransfer'));
-                  const hotels = cns.map((rs) => rs.hotelId);
-                  const uniqueHotels = hotels.reduce((acc, curr) => {
-                    acc[curr._id] = curr.name;
-                    return acc;
-                  }, {});
-                  setHotelsArr(uniqueHotels);
-                  setFlight('');
-                  setHotelId('');
-                  setHasTransfer('all');
+                  setFlight('all');
+                  console.log('flights', temp);
                 })
                 .then(() => {
                   setTime('');

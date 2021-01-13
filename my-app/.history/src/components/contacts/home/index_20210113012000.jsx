@@ -131,18 +131,7 @@ const HomeContacts = (props) => {
         </button>
       </form> */}
       {contacts.length !== 0 && (
-        <ContactsTable
-          contacts={contacts}
-          date={date}
-          setContacts={setContacts}
-          type="departure"
-          setHotelsArr={setHotelsArr}
-          setHotelId={setHotelId}
-          setFlightsArr={setFlightsArr}
-          setFlight={setFlight}
-          setTransferArr={setTransferArr}
-          setHasTransfer={setHasTransfer}
-        />
+        <ContactsTable contacts={contacts} date={date} setContacts={setContacts} type="departure" />
       )}
     </div>
   );

@@ -4,18 +4,7 @@ import styles from './contacts-table.module.css';
 import contactService from '../../../../services/contacts';
 import parseCookie from '../../../../utils/parseCookie';
 import PopupMessage from '../popup-message';
-const ContactsTable = ({
-  contacts,
-  date,
-  setContacts,
-  type,
-  setHotelsArr,
-  setHotelId,
-  setFlightsArr,
-  setFlight,
-  setTransferArr,
-  setHasTransfer,
-}) => {
+const ContactsTable = ({ contacts, date, setContacts, type, setHotelsArr, setFlightsArr, setTransferArr }) => {
   const history = useHistory();
   const token = parseCookie('tgs-token');
   const [arrChecked, setArrChecked] = useState([]);
@@ -202,17 +191,7 @@ const ContactsTable = ({
                   console.log(cns);
                   setContacts(cns);
                   const temp = await uniqueValFromArray(cns, 'flightDeparture');
-                  setFlightsArr(temp);
-                  setTransferArr(uniqueValFromArray(cns, 'hasTransfer'));
-                  const hotels = cns.map((rs) => rs.hotelId);
-                  const uniqueHotels = hotels.reduce((acc, curr) => {
-                    acc[curr._id] = curr.name;
-                    return acc;
-                  }, {});
-                  setHotelsArr(uniqueHotels);
-                  setFlight('');
-                  setHotelId('');
-                  setHasTransfer('all');
+                  console.log('flights', temp);
                 })
                 .then(() => {
                   setTime('');

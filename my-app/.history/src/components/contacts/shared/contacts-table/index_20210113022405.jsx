@@ -203,6 +203,7 @@ const ContactsTable = ({
                   setContacts(cns);
                   const temp = await uniqueValFromArray(cns, 'flightDeparture');
                   setFlightsArr(temp);
+                  setFlight('');
                   setTransferArr(uniqueValFromArray(cns, 'hasTransfer'));
                   const hotels = cns.map((rs) => rs.hotelId);
                   const uniqueHotels = hotels.reduce((acc, curr) => {
@@ -210,9 +211,6 @@ const ContactsTable = ({
                     return acc;
                   }, {});
                   setHotelsArr(uniqueHotels);
-                  setFlight('');
-                  setHotelId('');
-                  setHasTransfer('all');
                 })
                 .then(() => {
                   setTime('');

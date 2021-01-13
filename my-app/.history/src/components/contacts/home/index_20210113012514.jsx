@@ -136,11 +136,8 @@ const HomeContacts = (props) => {
           date={date}
           setContacts={setContacts}
           type="departure"
-          setHotelsArr={setHotelsArr}
           setHotelId={setHotelId}
-          setFlightsArr={setFlightsArr}
           setFlight={setFlight}
-          setTransferArr={setTransferArr}
           setHasTransfer={setHasTransfer}
         />
       )}

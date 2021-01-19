@@ -1,0 +1,53 @@
+div.login {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 22%;
+  align-items: center;
+  align-self: center;
+  margin: 30px auto;
+}
+h1.login {
+  margin-top: 0px;
+  margin-bottom: 0;
+}
+/* form {
+  display: inline-block;
+  margin: 40px auto;
+} */
+/* input,
+label {
+  display: inline-block;
+  height: 25px;
+  margin-top: 5px;
+  text-align: center;
+}
+input {
+  width: 50%;
+} */
+/* label {
+  width: 30%;
+  text-align: right;
+  margin-right: 20px;
+} */
+/* button {
+  position: relative;
+  left: 260px;
+  background: rgb(54, 187, 54);
+  border-radius: 4px;
+  padding: 10px 20px;
+  color: white;
+  margin-top: 15px;
+  width: 35%;
+  text-align: center;
+}
+button:hover {
+  cursor: pointer;
+  background: rgb(110, 233, 110);
+  color: black;
+}
+button:disabled {
+  background: rgb(148, 158, 148);
+  color: grey;
+  cursor: auto;
+} */

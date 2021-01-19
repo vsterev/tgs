@@ -1,0 +1,14 @@
+div.repwrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  margin: 15px auto;
+}
+.buttonaddrep {
+  align-self: flex-end;
+  position: relative;
+}
+h2.head {
+  margin: 0px;
+}

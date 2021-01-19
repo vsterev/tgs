@@ -1,0 +1,15 @@
+ul.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: space-evenly; */
+}
+li.navigation {
+  list-style: none;
+  margin: 10px;
+}
+div.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+}

@@ -1,0 +1,11 @@
+div.subwrap {
+  text-align: center;
+}
+h3.subwrap {
+  color: red;
+}
+div.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

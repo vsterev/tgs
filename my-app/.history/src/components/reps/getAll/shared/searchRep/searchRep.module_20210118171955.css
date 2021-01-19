@@ -1,0 +1,6 @@
+form.formrepsearch {
+  width: 60%;
+  margin: 0px auto;
+  display: flex;
+  justify-content: space-between;
+}

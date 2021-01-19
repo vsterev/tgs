@@ -1,0 +1,43 @@
+div.title {
+  color: rgb(170, 156, 156);
+}
+table {
+  color: rgb(102, 97, 97);
+  border-collapse: collapse;
+  border: 1px solid rgb(124, 119, 119);
+  margin: 10px auto;
+}
+td,
+th {
+  border-right: 1px solid rgb(170, 156, 156);
+  border-collapse: collapse;
+  padding: 2px 5px;
+}
+th {
+  border-bottom: 1px solid rgb(170, 156, 156);
+}
+tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+div.chips {
+  display: flex;
+  justify-content: flex-end;
+  width: 70%;
+  margin: 0px auto;
+}
+
+div.tablehead {
+  margin: 0px;
+}
+div.chip {
+  margin: 0px 5px;
+}
+h3.chips {
+  margin: 0px;
+}
+form.infostyle {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+  margin: 0 auto;
+}

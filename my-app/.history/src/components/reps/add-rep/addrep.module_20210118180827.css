@@ -1,0 +1,14 @@
+div.wrap {
+  width: 80%;
+  margin: 0px auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+form.formaddrep {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  min-width: 30%;
+}

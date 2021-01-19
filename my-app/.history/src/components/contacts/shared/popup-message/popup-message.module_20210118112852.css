@@ -1,0 +1,4 @@
+.popupwrap {
+  display: flex;
+  flex-direction: column;
+}

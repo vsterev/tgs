@@ -11,7 +11,8 @@ router.get('/checkIn-message-bulkSms/:date', auth(), contactController.get.check
 router.get('/checkIn-message-bulkSms2/:date', auth(), contactController.get.checkInMessageBulkSms2);
 router.get('/checkOut-message-bulkSms2/:date', auth(), contactController.get.checkOutMessageBulkSms2);
 router.get('/bulk-sms/message/info/:messageId', auth(), contactController.get.bulckMessageInfo);
-router.get('/checkIn-message-contact-check/:date', auth(), contactController.get.checkCkeckInContacts);
+router.get('/checkIn-message-contact-check/:date', auth(), contactController.get.checkCheckInContacts);
+router.get('/checkOut-message-contact-check/:date', auth(), contactController.get.checkCheckOutContacts);
 router.get('/all-without-planned/transsfer/:date', auth(), contactController.get.getAllWatingTransfer);
 router.get('/contacts/test', auth(), contactController.get.testIncludeArr);
 router.post('/update', auth(), contactController.post.update);

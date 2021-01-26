@@ -6,6 +6,7 @@ const sendEmail = require('../utils/sendMail');
 const { reject } = require('bluebird');
 const hotel = require('../models/hotel');
 const contact = require('../models/contact');
+const { parseStringPromise } = require('xml2js');
 module.exports = {
   get: {
     all: (req, res) => {
@@ -197,7 +198,15 @@ module.exports = {
               const body = `Dear ${contact.name} - Welcome to Bulgaria! You are accommodated in ${
                 contact.hotelId.name
               } from ${contact.checkIn} to ${contact.checkOut}. Reps that will support you: ${contact.reps.map(
-                (rep) => rep.firstName + ' ' + rep.familyName + ' on phone ' + rep.phone
+                (rep) =>
+                  rep.firstName +
+                  ' ' +
+                  rep.familyName +
+                  ' on phone ' +
+                  rep.phone +
+                  ' with ' +
+                  rep.languages.join(', ') +
+                  ' languages'
               )}. DMC Solvex wish you sunny and smiley holiday :-) `;
               const to = contact.phone;
               data.push({ to, body });
@@ -213,6 +222,9 @@ module.exports = {
               noPhones.push(contact.resId);
             }
           });
+          return Promise.all([data, noRepsAdded, noPhones, contacts]);
+        })
+        .then(([data, noRepsAdded, noPhones, contacts]) => {
           console.log(data);
           sendEmail(
             'TGS - Error sending SMS via Bulk',
@@ -222,22 +234,26 @@ module.exports = {
             Tourists from this reservation and hotels will not receive messages from Travel Guide System! \n Please fill phones or add rep in the system and resend message.`,
             ['vasil@solvex.bg']
           );
-          bulkSendMany(data)
-            .then((result) => {
-              if (Array.isArray(result))
-                result.map((rs) => {
-                  // const insertF = async () => {
-                  contactModel
-                    .findOneAndUpdate({ phone: rs.to, checkIn: date }, { firstSendMessage: rs.id }, { new: true })
-                    .then(console.log)
-                    .catch(console.log);
-                  // };
-                  // insertF();
-                });
-            })
-            .catch((err) => console.log(err));
+          const bulkSender = bulkSendMany(data);
+          return Promise.all([data, noRepsAdded, noPhones, contacts, bulkSender]);
+        })
+        .then(async ([data, noRepsAdded, noPhones, contacts, bulkSender]) => {
+          console.log('bs', bulkSender);
+          if (Array.isArray(bulkSender)) {
+            await bulkSender.map(async (rs) => {
+              // const insertF = async () => {
+              await contactModel
+                .findOneAndUpdate({ phone: rs.to, checkIn: date }, { firstSendMessage: rs.id }, { new: true })
+                .then((a) => console.log('alooooo', a))
+                .catch(console.log);
+              // }
+              // insertF();
+            });
+          }
+          console.log('positive', bulkSender);
           res.status(200).json({ contactsToSend: contacts.length, noPhones, noRepsAdded, dataSended: data.length });
-        });
+        })
+        .catch((err) => console.log(err));
       // .catch((err) => console.log(err));
     },
     checkOutMessageBulkSms2: (req, res) => {
@@ -293,7 +309,10 @@ module.exports = {
               noPhones.push(contact.resId);
             }
           });
-          console.log(data);
+          return Promise.all([data, noPhones, noRepsAdded, contacts]);
+        })
+        .then(async ([data, noPhones, noRepsAdded, contacts]) => {
+          console.log('data', data);
           sendEmail(
             'TGS - Error sending SMS via Bulk',
             `You receive this message, because there are reservation that have not receive SMS welcome noifications.
@@ -302,20 +321,26 @@ module.exports = {
             Tourists from this reservation and hotels will not receive messages from Travel Guide System! \n Please fill phones or add rep in the system and resend message.`,
             ['vasil@solvex.bg']
           );
-          bulkSendMany(data)
-            .then((result) => {
-              if (Array.isArray(result))
-                result.map((rs) => {
-                  contactModel
-                    .findOneAndUpdate({ phone: rs.to, checkOut: date }, { lastSendMessage: rs.id }, { new: true })
-                    .then(console.log)
-                    .catch(console.log);
-                });
-            })
-            .catch((err) => console.log(err));
+          const bulkSender = bulkSendMany(data);
+          return Promise.all([data, noPhones, noRepsAdded, contacts, bulkSender]);
+        })
+        .then(async ([data, noPhones, noRepsAdded, contacts, bulkSender]) => {
+          if (Array.isArray(bulkSender)) {
+            await bulkSender.map(async (rs) => {
+              // async function updateContact() {
+              await contactModel
+                .findOneAndUpdate({ phone: rs.to, checkOut: date }, { lastSendMessage: rs.id }, { new: true })
+                .then((a) => console.log('alooooo', a))
+                .catch(console.log);
+              // }
+              // updateContact();
+            });
+          }
+          //da find all contacts
+          console.warn('tuk e posleden', bulkSender);
           res.status(200).json({ contactsToSend: contacts.length, noPhones, noRepsAdded, dataSended: data.length });
-        });
-      // .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log());
     },
     checkIn: (req, res) => {
       const { date } = req.params;
@@ -335,7 +360,7 @@ module.exports = {
         .then((rs) => res.status(200).json(rs))
         .catch((err) => res.status(400).json(err));
     },
-    checkCkeckInContacts: (req, res) => {
+    checkCheckInContacts: (req, res) => {
       const { date } = req.params;
       contactModel
         .find({ checkIn: date }) //send only to contacts that firstSendMessage is not defined
@@ -366,35 +391,108 @@ module.exports = {
           const noRepsAdded = {};
           contacts.map((contact) => {
             if ((contact.reps.length > 0) & !!contact.phone) {
-              const body = `Dear ${contact.name} - Welcome to Bulgaria! You are accommodated in ${
-                contact.hotelId.name
-              } from ${contact.checkIn} to ${
-                contact.checkOut
-              }. Reps that will support you durring your stay : ${contact.reps.map(
-                (rep) =>
-                  rep.firstName +
-                  ' ' +
-                  rep.familyName +
-                  'speaking' +
-                  rep.languages.join(', ') +
-                  ' on phone ' +
-                  rep.phone
-              )}. More info about excursions - https://b2b.solvex.bg/en/excursions. Enjoy your holiday!`;
-              const to = contact.phone;
-              data.push({ to, body });
+              // const body = `Dear ${contact.name} - Welcome to Bulgaria! You are accommodated in ${
+              //   contact.hotelId.name
+              // } from ${contact.checkIn} to ${
+              //   contact.checkOut
+              // }. Reps that will support you durring your stay : ${contact.reps.map(
+              //   (rep) =>
+              //     rep.firstName +
+              //     ' ' +
+              //     rep.familyName +
+              //     'speaking' +
+              //     rep.languages.join(', ') +
+              //     ' on phone ' +
+              //     rep.phone
+              // )}. More info about excursions - https://b2b.solvex.bg/en/excursions. Enjoy your holiday!`;
+              // const to = contact.phone;
+              // data.push({ to, body });
+              // continue;
             } else if (contact.reps.length === 0) {
-              console.log(
-                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
-              );
+              // console.log(
+              //   `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
+              // );
               if (!noRepsAdded.hasOwnProperty(contact.hotelId._id)) {
                 noRepsAdded[contact.hotelId._id] = contact.hotelId.name;
               } else {
                 noRepsAdded[contact.hotelId._id] = contact.hotelId.name;
               }
             } else if (!contact.phone) {
-              console.log(
-                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
-              );
+              // console.log(
+              //   `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
+              // );
+              noPhones.push(contact.resId);
+            }
+          });
+          res.status(200).json({
+            allContacts: contacts.length,
+            contactMessageSended: contactMessageSended.length,
+            noPhones,
+            noRepsAdded,
+          });
+        });
+    },
+    checkCheckOutContacts: (req, res) => {
+      const { date } = req.params;
+      contactModel
+        .find({ checkOut: date }) //send only to contacts that firstSendMessage is not defined
+        .populate('hotelId')
+        .lean()
+        .then((contacts) => {
+          const contactMessageSended = [];
+          const contactHotels = contacts.map((contact) => {
+            if (!!contact.lastSendMessage) {
+              contactMessageSended.push(contact.resId);
+            }
+            return contact.hotelId._id;
+          });
+          const contactsRepsHotels = repModel.find({ hotels: { $in: contactHotels } }).lean();
+          return Promise.all([contacts, contactsRepsHotels, contactMessageSended]);
+        })
+        .then(([contacts, contactsRepsHotels, contactMessageSended]) => {
+          const contM = contacts.map((contact) => {
+            contact.reps = []; //add property reps to each contact
+            contactsRepsHotels.filter((contactsRep) => {
+              if (contactsRep.hotels.includes(contact.hotelId._id.toString())) {
+                contact.reps = [...contact.reps, contactsRep];
+              }
+            });
+          });
+          const data = [];
+          const noPhones = [];
+          const noRepsAdded = {};
+          contacts.map((contact) => {
+            if ((contact.reps.length > 0) & !!contact.phone) {
+              // const body = `Dear ${contact.name} - Welcome to Bulgaria! You are accommodated in ${
+              //   contact.hotelId.name
+              // } from ${contact.checkIn} to ${
+              //   contact.checkOut
+              // }. Reps that will support you durring your stay : ${contact.reps.map(
+              //   (rep) =>
+              //     rep.firstName +
+              //     ' ' +
+              //     rep.familyName +
+              //     'speaking' +
+              //     rep.languages.join(', ') +
+              //     ' on phone ' +
+              //     rep.phone
+              // )}. More info about excursions - https://b2b.solvex.bg/en/excursions. Enjoy your holiday!`;
+              // const to = contact.phone;
+              // data.push({ to, body });
+              // continue;
+            } else if (contact.reps.length === 0) {
+              // console.log(
+              //   `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
+              // );
+              if (!noRepsAdded.hasOwnProperty(contact.hotelId._id)) {
+                noRepsAdded[contact.hotelId._id] = contact.hotelId.name;
+              } else {
+                noRepsAdded[contact.hotelId._id] = contact.hotelId.name;
+              }
+            } else if (!contact.phone) {
+              // console.log(
+              //   `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
+              // );
               noPhones.push(contact.resId);
             }
           });

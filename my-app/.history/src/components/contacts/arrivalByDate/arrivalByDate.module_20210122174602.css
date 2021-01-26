@@ -1,0 +1,15 @@
+div.arrivalwrapper {
+  text-align: center;
+}
+h2.arrival {
+  margin-bottom: 0;
+}
+div.btns {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  /* width: 80%; */
+  margin: 10px auto;
+  /* background: red; */
+  align-items: center;
+}

@@ -1,0 +1,14 @@
+div.departurewrapper {
+  text-align: center;
+}
+h2.departure {
+  margin-bottom: 0;
+}
+div.btns {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  margin: 10px auto;
+  align-items: center;
+  justify-content: space-evenly;
+}

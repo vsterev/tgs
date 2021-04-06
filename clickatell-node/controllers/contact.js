@@ -1,5 +1,6 @@
 const { contactModel, repModel } = require('../models');
 const { bulkSend, bulkSmsCheck } = require('../utils/bulk-sms');
+const { bulkSmsProfile } = require('../utils/bulk-sms/');
 const { bulkSendMany } = require('../utils/bulk-sms');
 const sendMes = require('../api/newServ');
 const sendEmail = require('../utils/sendMail');
@@ -210,12 +211,14 @@ module.exports = {
               )}. DMC Solvex wish you sunny and smiley holiday :-) `;
               const to = contact.phone;
               data.push({ to, body });
-            } else if (contact.reps.length === 0) {
+            }
+            if (contact.reps.length === 0) {
               console.log(
                 `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
               );
               noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
-            } else if (!contact.phone) {
+            }
+            if (!contact.phone) {
               console.log(
                 `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
@@ -225,16 +228,26 @@ module.exports = {
           return Promise.all([data, noRepsAdded, noPhones, contacts]);
         })
         .then(([data, noRepsAdded, noPhones, contacts]) => {
-          console.log(data);
-          sendEmail(
-            'TGS - Error sending SMS via Bulk',
-            `You receive this message, because there are reservation that have not receive SMS welcome noifications.
-            Hotels: ${noRepsAdded.join(', ')} have not reps attached. \n
-            Reservations: ${noPhones.join(', ')} have not phone attached. \n
-            Tourists from this reservation and hotels will not receive messages from Travel Guide System! \n Please fill phones or add rep in the system and resend message.`,
-            ['vasil@solvex.bg']
-          );
-          const bulkSender = bulkSendMany(data);
+          console.log(data, noRepsAdded, noPhones);
+          if (noRepsAdded.length + noPhones.length > 0) {
+            sendEmail(
+              'TGS - Error sending SMS via Bulk',
+              ` Dear admin, <br>
+              You receive this message, because there are any reservations that have not receive SMS welcome noifications.<br>
+              ${noRepsAdded.length > 0 ? `Hotel/s: ${noRepsAdded.join(', ')} do not have any rep attached. \<br>` : ''}
+              ${
+                noPhones.length > 0
+                  ? `Reservation/s: ${noPhones.join(', ')} do not have any phone attached. \<br> `
+                  : ''
+              }
+              Tourists will not receive any SMS messages from Travel Guide System! \<br>
+              Please correct the missing information and resend the welcome message again.\<br>
+              `,
+              ['vasil@solvex.bg']
+            );
+          }
+          // const bulkSender = bulkSendMany(data);
+          const bulkSender = bulkSmsProfile('POST', 'messages', data).then((r) => r.json());
           return Promise.all([data, noRepsAdded, noPhones, contacts, bulkSender]);
         })
         .then(async ([data, noRepsAdded, noPhones, contacts, bulkSender]) => {
@@ -297,12 +310,8 @@ module.exports = {
               const body = `Dear ${contact.name} - your departure date is ${contact.checkOut} the transfer time is at ${contact.time} h - ${contact.comment}. Your DMC Solvex wishes you a safe trip!  `;
               const to = contact.phone;
               data.push({ to, body });
-            } else if (contact.reps.length === 0) {
-              console.log(
-                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
-              );
-              noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
-            } else if (!contact.phone) {
+            }
+            if (!contact.phone) {
               console.log(
                 `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
@@ -313,15 +322,24 @@ module.exports = {
         })
         .then(async ([data, noPhones, noRepsAdded, contacts]) => {
           console.log('data', data);
-          sendEmail(
-            'TGS - Error sending SMS via Bulk',
-            `You receive this message, because there are reservation that have not receive SMS welcome noifications.
-            Hotels: ${noRepsAdded.join(', ')} have not reps attached. \n
-            Reservations: ${noPhones.join(', ')} have not phone attached. \n
-            Tourists from this reservation and hotels will not receive messages from Travel Guide System! \n Please fill phones or add rep in the system and resend message.`,
-            ['vasil@solvex.bg']
-          );
-          const bulkSender = bulkSendMany(data);
+          if (noPhones.length > 0) {
+            sendEmail(
+              'TGS - Error sending SMS via Bulk',
+              ` Dear admin, <br>
+              You receive this message, because there are any reservations that have not receive SMS checkout noifications.<br>
+              ${
+                noPhones.length > 0
+                  ? `Reservation/s: ${noPhones.join(', ')} do not have any phone attached. \<br> `
+                  : ''
+              }
+              Tourists will not receive checkout SMS messages from Travel Guide System! \<br>
+              Please correct the missing information and resend the welcome message again.\<br>
+              `,
+              ['vasil@solvex.bg']
+            );
+          }
+          // const bulkSender = bulkSendMany(data);
+          const bulkSender = bulkSmsProfile('POST', 'messages', data).then((r) => r.json());
           return Promise.all([data, noPhones, noRepsAdded, contacts, bulkSender]);
         })
         .then(async ([data, noPhones, noRepsAdded, contacts, bulkSender]) => {
@@ -504,14 +522,21 @@ module.exports = {
           });
         });
     },
-    bulckMessageInfo: (req, res) => {
-      const { messageId } = req.params;
-      bulkSmsCheck(messageId)
-        .then((r) => {
-          res.status(200).json(r);
-        })
-        .catch((e) => res.status(400).json(e));
-    },
+    // bulckMessageInfo: (req, res) => {
+    //   const { messageId } = req.params;
+    //   bulkSmsCheck(messageId)
+    //     .then((r) => {
+    //       res.status(200).json(r);
+    //     })
+    //     .catch((e) => res.status(400).json(e));
+    // },
+    // bulckProfile: (req, res) => {
+    //   bulkSmsProfile()
+    //     .then((r) => {
+    //       res.status(200).json(r);
+    //     })
+    //     .catch((e) => res.status(400).json(e));
+    // },
   },
   post: {
     addComment: (req, res) => {
@@ -653,5 +678,21 @@ module.exports = {
           res.status(404).json(e);
         });
     },
+    // bulckManualSend: (req, res) => {
+    //   const { user } = req;
+    //   const { message, toArr } = req.body;
+    //   console.log(message, toArr);
+    //   bulkSendMany({ to: toArr, body: message })
+    //     .then((rs) => {
+    //       if (rs) {
+    //         res.status(200).json({ rs });
+    //         return;
+    //       }
+    //       return res.status(400).json({ err: 'Wrong fetching' });
+    //     })
+    //     .catch((err) => {
+    //       res.status(401).json(err);
+    //     });
+    // },
   },
 };

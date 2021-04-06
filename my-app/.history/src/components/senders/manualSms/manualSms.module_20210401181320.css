@@ -1,0 +1,9 @@
+form.manualSms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+div.error {
+  color: red;
+  font-style: italic;
+}

@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
-const Bluebird = require('bluebird');
-const { contactModel } = require('../../models');
-fetch.Promise = Bluebird;
+// const Bluebird = require('bluebird');
+// const { contactModel } = require('../../models');
+// fetch.Promise = Bluebird;
 const bulkSmsSendMany = function (data) {
   return (
     fetch('https://api.bulksms.com/v1/messages', {
@@ -15,10 +15,16 @@ const bulkSmsSendMany = function (data) {
           'Basic MDRCRDM5MUI5QkE4NDRFQzgzMUFGQTc4NEIwNUZDMzgtMDItNjo3cVBzSl82YiEzV3Y1d284SHcqcVA1MjlBdmNlVg==',
       },
     })
-      .then((rs) => rs.json())
+      .then((rs) => {
+        // if (rs) {
+        return rs.json();
+        // return;
+        // }
+        // console.log('tuk ima greshka');
+      })
       // .then((r) => console.log(r))
       // .then((rs) => contactModel.findOneAndUpdate({ resId: contact.resId }, { firstSendMessage: rs[0].id }))
-      .catch((err) => console.log(err))
+      .catch((err) => console.log('a', err))
   );
 };
 module.exports = bulkSmsSendMany;

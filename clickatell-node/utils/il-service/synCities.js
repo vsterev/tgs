@@ -12,6 +12,7 @@ const requestStr = `
     </GetCities>
   </soap:Body>
 </soap:Envelope>`;
+// const syncCities = () => {
 return fetch('http://evaluation.solvex.bg/iservice/integrationservice.asmx', {
   method: 'post',
   body: requestStr,
@@ -23,12 +24,7 @@ return fetch('http://evaluation.solvex.bg/iservice/integrationservice.asmx', {
   .then((xml) => {
     return parser.parseStringPromise(xml);
   })
-  .then(
-    (result) =>
-      result['soap:Envelope']['soap:Body'][0]['GetCitiesResponse'][0][
-        'GetCitiesResult'
-      ][0]['City']
-  )
+  .then((result) => result['soap:Envelope']['soap:Body'][0]['GetCitiesResponse'][0]['GetCitiesResult'][0]['City'])
   .then((cities) => {
     MongoClient.connect(url, function (err, client) {
       var db = client.db('messages');
@@ -51,3 +47,5 @@ return fetch('http://evaluation.solvex.bg/iservice/integrationservice.asmx', {
     });
   })
   .catch((err) => console.log(err));
+// };
+// module.exports = syncCities;

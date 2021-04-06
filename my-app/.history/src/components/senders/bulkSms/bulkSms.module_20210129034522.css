@@ -1,0 +1,15 @@
+div.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  margin: 20px auto;
+}
+div.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 35%;
+  margin: 20px auto;
+}

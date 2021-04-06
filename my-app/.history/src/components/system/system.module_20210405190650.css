@@ -1,0 +1,8 @@
+div.wrapper {
+  flex-direction: columns;
+  align-items: center;
+  margin: 0 auto;
+}
+button.buttonSys {
+  margin: 10 10;
+}

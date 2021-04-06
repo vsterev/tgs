@@ -1,0 +1,30 @@
+h2.manualSms {
+  text-align: center;
+}
+form.manualSms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+div.error {
+  color: red;
+  font-style: italic;
+}
+/* input[id='to'].manualSms { */
+input.manualSms {
+  width: 500px;
+  font-size: 15px;
+  padding: 6px;
+  margin-left: 10px;
+  margin: 20px;
+}
+textarea.manualSms {
+  width: 500px;
+  font-size: 15px;
+  padding: 6px;
+  margin-left: 10px;
+  margin: 20px;
+}
+label.manualSms {
+  align-items: left;
+}

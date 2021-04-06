@@ -1,0 +1,4 @@
+form.manual-sms {
+  display: flex;
+  flex-direction: column;
+}

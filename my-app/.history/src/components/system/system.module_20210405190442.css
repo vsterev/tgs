@@ -1,0 +1,4 @@
+div.wrapper {
+  flex-direction: columns;
+  align-items: center;
+}

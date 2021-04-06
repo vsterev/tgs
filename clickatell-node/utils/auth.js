@@ -7,7 +7,7 @@ function auth() {
     const token = req.headers.authorization || '';
 
     if (!token) {
-      res.status(404).json({ status: false, msg: 'No token provided' });
+      res.status(401).json({ status: false, msg: 'No token provided' });
       return;
     }
     Promise.all([jwt.verifyToken(token), tokenBlacklistModel.findOne({ token })])
@@ -25,13 +25,22 @@ function auth() {
         //     next();
         //     return;
         // }
-        if (['token expired', 'blacklisted token', 'jwt must be provided', 'jwt malformed'].includes(err.message)) {
+        if (
+          [
+            'jwt expired',
+            'invalid token',
+            'token expired',
+            'blacklisted token',
+            'jwt must be provided',
+            'jwt malformed',
+          ].includes(err.message)
+        ) {
           // res.redirect('/user/login?error')
-          res.status(404).json({ msg: err, redirect: true });
+          res.status(403).json({ msg: err, redirect: true });
           console.log(err);
           return;
         }
-        res.status(404).json({ msg: err });
+        res.status(401).json({ msg: err });
         console.log(err);
       });
   };

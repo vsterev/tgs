@@ -38,5 +38,7 @@ module.exports = (app) => {
   app.use('/resorts', routes.resort);
   app.use('/rep', routes.rep);
   app.use('/transfers', routes.transfer);
+  app.use('/bulkSms', routes.bulkSms);
+  app.use('/il', routes.inlooks);
   // app.use('*', courseController.get.notFound)
 };

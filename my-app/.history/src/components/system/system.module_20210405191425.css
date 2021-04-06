@@ -1,0 +1,11 @@
+div.wrapper {
+  flex-direction: columns;
+  align-items: center;
+  margin: 0px auto;
+}
+button.buttonSys {
+  margin: 10px 40px 20px 0px;
+  padding: 10px;
+  border-radius: 30px;
+  cursor: pointer;
+}

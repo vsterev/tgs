@@ -6,7 +6,8 @@ const getRegions = function (countryId) {
   <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
   <GetRegions xmlns="http://www.megatec.ru/">
-  <countryKey>${countryId}</countryKey>
+  <countryKey>4</countryKey>
+  <regionKey>-1</regionKey>
   </GetRegions>
   </soap:Body>
   </soap:Envelope>
@@ -19,17 +20,8 @@ const getRegions = function (countryId) {
     },
   })
     .then((res) => res.text())
-    .then((xml) => {
-      return parser
-        .parseStringPromise(xml)
-        .then((result) => {
-          const regions =
-            result['soap:Envelope']['soap:Body'][0]['GetRegionsResponse'][0][
-              'GetRegionsResult'
-            ][0]['Region'];
-          return regions;
-        })
-        .catch((err) => console.log(err));
-    });
+    .then((xml) => parser.parseStringPromise(xml))
+    .then((result) => result['soap:Envelope']['soap:Body'][0]['GetRegionsResponse'][0]['GetRegionsResult'][0]['Region'])
+    .catch((err) => console.log(err));
 };
 module.exports = getRegions;

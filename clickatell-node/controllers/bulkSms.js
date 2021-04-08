@@ -37,8 +37,6 @@ module.exports = {
     manualSend: (req, res) => {
       const { user } = req;
       const { message, toArr } = req.body;
-      console.log(message, toArr);
-      //   bulkSendMany({ to: toArr, body: message })
       bulkSmsProfile('POST', 'messages', { to: toArr, body: message })
         .then((fr) => fr.json())
         .then((rs) => {

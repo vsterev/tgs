@@ -5,12 +5,38 @@
 
 const crypto = require('crypto');
 const api_secret = '$2y$10$9ruO/hrtIxJb.804MRWhGePCMFn0V7PVUPqi1hd5HFiTCbR7mq9pC';
-let data = {
-  msisdn: '359883460639',
-  sc: '1909',
-  text: 'hello world',
-  service_id: 495,
-};
+let data = [
+  {
+    msisdn: '359883460639',
+    sc: '1909',
+    text: 'hello world',
+    service_id: 495,
+  },
+  {
+    msisdn: '359883460639',
+    sc: '1909',
+    text: 'hello world',
+    service_id: 495,
+  },
+  {
+    msisdn: '359883460632',
+    sc: '1909',
+    text: 'hello world',
+    service_id: 495,
+  },
+  {
+    msisdn: '359883460633',
+    sc: '1909',
+    text: 'hello world',
+    service_id: 495,
+  },
+  {
+    msisdn: '359883460639',
+    sc: '1909',
+    text: 'hello world',
+    service_id: 495,
+  },
+];
 data = JSON.stringify(data);
 console.log(data);
 function getHash(d) {

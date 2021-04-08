@@ -5,5 +5,6 @@ const resort = require('./resort');
 const rep = require('./rep');
 const transfer = require('./transfer');
 const bulkSms = require('./bulkSms');
+const linkMobility = require('./linkMobility');
 const inlooks = require('./inlooks');
-module.exports = { contacts, user, hotel, rep, resort, transfer, bulkSms, inlooks };
+module.exports = { contacts, user, hotel, rep, resort, transfer, bulkSms, inlooks, linkMobility };

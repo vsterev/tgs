@@ -208,7 +208,11 @@ module.exports = {
                   ' with ' +
                   rep.languages.join(', ') +
                   ' languages'
-              )}. DMC Solvex wish you sunny and smiley holiday :-) `;
+              )}.
+              Our excursions visit: https://b2b.solvex.bg/en/excursions?city_id=${
+                contact.hotelId.resortId
+              }&start_date=${contact.checkIn}&end_date=${contact.checkOut} 
+              DMC Solvex wish you sunny and smiley holiday :-) `;
               const to = contact.phone;
               data.push({ to, body });
             }
@@ -246,6 +250,7 @@ module.exports = {
               ['vasil@solvex.bg']
             );
           }
+          // console.log(data);
           // const bulkSender = bulkSendMany(data);
           const bulkSender = bulkSmsProfile('POST', 'messages', data).then((r) => r.json());
           return Promise.all([data, noRepsAdded, noPhones, contacts, bulkSender]);
@@ -307,6 +312,7 @@ module.exports = {
           const noRepsAdded = [];
           contacts.map((contact) => {
             if ((contact.reps.length > 0) & !!contact.phone) {
+              //da dobavia uslovie za comment tyabva da e tuk
               const body = `Dear ${contact.name} - your departure date is ${contact.checkOut} the transfer time is at ${contact.time} h - ${contact.comment}. Your DMC Solvex wishes you a safe trip!  `;
               const to = contact.phone;
               data.push({ to, body });

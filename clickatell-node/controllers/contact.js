@@ -27,6 +27,25 @@ module.exports = {
           console.error(err);
         });
     },
+    getRes: (req, res) => {
+      const { resId } = req.params;
+      console.log(resId);
+      contactModel
+        .findOne({ resId })
+        .populate({
+          path: 'hotelId',
+          model: 'Hotel',
+          populate: { path: 'resortId', model: 'Resort', select: 'name' },
+        })
+        .then((contact) => {
+          // console.log(contact);
+          res.status(200).json({ status: true, contact });
+        })
+        .catch((err) => {
+          res.status(404).json({ status: false, msg: err });
+          console.error(err);
+        });
+    },
     checkOut: (req, res) => {
       const { date } = req.params;
       console.log(date);
@@ -261,7 +280,7 @@ module.exports = {
             await bulkSender.map(async (rs) => {
               // const insertF = async () => {
               await contactModel
-                .findOneAndUpdate({ phone: rs.to, checkIn: date }, { firstSendMessage: rs.id }, { new: true })
+                .findOneAndUpdate({ phone: rs.to, checkIn: date }, { firstSendMessage: 'b-' + rs.id }, { new: true })
                 .then((a) => console.log('alooooo', a))
                 .catch(console.log);
               // }
@@ -293,7 +312,7 @@ module.exports = {
         .then((contacts) => {
           console.log(contacts);
           const contactHotels = contacts.map((contact) => {
-            return contact.hotelId._id;
+            return contact.hotelId._id.toString();
           });
           const contactsRepsHotels = repModel.find({ hotels: { $in: contactHotels } }).lean();
           return Promise.all([contacts, contactsRepsHotels]);
@@ -317,6 +336,12 @@ module.exports = {
               const to = contact.phone;
               data.push({ to, body });
             }
+            if (contact.reps.length === 0) {
+              console.log(
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
+              );
+              noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
+            }
             if (!contact.phone) {
               console.log(
                 `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
@@ -327,12 +352,12 @@ module.exports = {
           return Promise.all([data, noPhones, noRepsAdded, contacts]);
         })
         .then(async ([data, noPhones, noRepsAdded, contacts]) => {
-          console.log('data', data);
-          if (noPhones.length > 0) {
+          if (noRepsAdded.length + noPhones.length > 0) {
             sendEmail(
               'TGS - Error sending SMS via Bulk',
               ` Dear admin, <br>
               You receive this message, because there are any reservations that have not receive SMS checkout noifications.<br>
+              ${noRepsAdded.length > 0 ? `Hotel/s: ${noRepsAdded.join(', ')} do not have any rep attached. \<br>` : ''}
               ${
                 noPhones.length > 0
                   ? `Reservation/s: ${noPhones.join(', ')} do not have any phone attached. \<br> `
@@ -353,7 +378,7 @@ module.exports = {
             await bulkSender.map(async (rs) => {
               // async function updateContact() {
               await contactModel
-                .findOneAndUpdate({ phone: rs.to, checkOut: date }, { lastSendMessage: rs.id }, { new: true })
+                .findOneAndUpdate({ phone: rs.to, checkOut: date }, { lastSendMessage: 'b-' + rs.id }, { new: true })
                 .then((a) => console.log('alooooo', a))
                 .catch(console.log);
               // }

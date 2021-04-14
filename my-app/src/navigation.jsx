@@ -30,6 +30,8 @@ import ManualSmsPage from './components/pages/senders/manualSms';
 import ArrivalsPage from './components/pages/arrivals';
 import Material from './components/material';
 import SystemComponentPage from './components/pages/system';
+import UserRating from './components/rating';
+import ThanksPage from './components/pages/thankyou'
 const Navigation = () => {
   const { loggedIn } = useContext(AuthContext);
   return (
@@ -37,8 +39,10 @@ const Navigation = () => {
       <Switch>
         {/* <AuthContext> */}
         {/* <Route path="/" exact render={!loggedIn ? () => <Home /> : () => <HomeAuth />} /> */}
+        <Route path="/user-vote/:resId" component={UserRating} />
+        <Route path="/thanks" component={ThanksPage} />
         <Route path="/admin" exact render={!loggedIn ? () => <LoginPage /> : () => <RepsListPage />} />
-        <Route path="/admin/login" render={!loggedIn ? () => <LoginPage /> : () => <RepsListPage />} />
+        {/* <Route path="/admin/login" render={!loggedIn ? () => <LoginPage /> : () => <RepsListPage />} /> */}
         <Route path="/admin/reps/list" render={loggedIn ? () => <RepsListPage /> : () => <LoginPage />} />
         <Route
           path="/admin/reps/add-hotel/:repId"
@@ -53,7 +57,7 @@ const Navigation = () => {
         />
         <Route path="/admin/register" component={Register} />
         <Route path="/admin/logout" component={Logout} />
-        <Route path="/admin" exact render={!loggedIn ? () => <Home /> : () => <HomeAuth />} />
+        {/* <Route path="/admin" exact render={!loggedIn ? () => <Home /> : () => <HomeAuth />} /> */}
         <Route path="/admin/transfer/departure/:date" component={DeparturePage} />
         <Route path="/admin/contacts/home/" render={loggedIn ? () => <HomeContacts /> : () => <LoginPage />} />
         <Route

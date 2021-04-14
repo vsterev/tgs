@@ -1,0 +1,124 @@
+[{
+   "name": "Galin Georgiev",
+  "resId": "123809",
+  "hotelId": "2467",
+  "checkIn": "10.07.2020",
+  "checkOut": "22.07.2020",
+  "phone": "359888306607",
+  "flightArrival": "LZ345",
+  "flightDeparture": "LZ445",
+  "hasTransfer": true,
+  "comment": "at the reception",
+  "time": "15:03",
+  "lastSendMessage": "b-961917266939617280",
+  "firstSendMessage": "l-test1-6070b8068ccb36.87588578"
+},{
+  "name": "Ivan Draganov",
+  "resId": "213458",
+  "hotelId": "3845",
+  "checkIn": "15.07.2020",
+  "checkOut": "19.07.2020",
+  "phone": "359888340639",
+  "flightArrival": "LZ345",
+  "flightDeparture": "Lz445",
+  "hasTransfer": true,
+  "comment": "",
+  "time": "12:00",
+  "firstSendMessage": "b-961626620320292864"
+},{
+  "name": "Dragula Ionescu",
+  "resId": "398415",
+  "hotelId": "1907",
+  "checkIn": "10.07.2020",
+  "checkOut": "19.07.2020",
+  "phone": "359885999189",
+  "flightArrival": "BUC6012",
+  "hasTransfer": true,
+  "comment": "",
+  "firstSendMessage": "b-957382003739598848",
+  "time": "12:00",
+  "flightDeparture": "gh789",
+  "lastSendMessage": "b-961624387411255296"
+},{
+  "name": "Neste Serafim",
+  "resId": "567904",
+  "hotelId": "1464",
+  "checkIn": "10.07.2020",
+  "checkOut": "22.07.2020",
+  "phone": "359884122060",
+  "flightArrival": "BUC6012",
+  "flightDeparture": "BUC6011",
+  "hasTransfer": true,
+  "comment": "at reception",
+  "firstSendMessage": "uiuiuu",
+  "time": "07:30",
+  "lastSendMessage": "l-test1-6070bb46ab6750.66818673"
+},{
+  "name": "Velizar Shterev",
+  "resId": "146705",
+  "hotelId": "1448",
+  "checkIn": "10.07.2020",
+  "checkOut": "22.07.2020",
+  "phone": "359886104248",
+  "flightArrival": "BUC6210",
+  "flightDeparture": "BUC6209",
+  "hasTransfer": true,
+  "comment": "at the reception",
+  "time": "15:03",
+  "firstSendMessage": "l-test1-6070b8068cf1f4.75330218",
+  "lastSendMessage": "l-test1-6070bb46ab9009.89637709"
+},{
+  "name": "Madranescu Konstantinu",
+  "resId": "345901",
+  "hotelId": "1025",
+  "checkIn": "15.07.2020",
+  "checkOut": "19.07.2020",
+  "phone": "",
+  "flightArrival": "LZ345",
+  "flightDeparture": "Lz445",
+  "hasTransfer": false,
+  "comment": " ",
+  "time": "10:05"
+},{
+  "_id": {
+    "$oid": "5f78034e6a26c635244a0dc6"
+  },
+  "name": "Kosnatnos Filosofikus",
+  "resId": "504350",
+  "hotelId": "1464",
+  "checkIn": "15.07.2020",
+  "checkOut": "19.07.2020",
+  "phone": "359888340639",
+  "hasTransfer": true,
+  "time": "12:00",
+  "comment": "",
+  "flightDeparture": "LZ4567",
+  "firstSendMessage": "b-961622347419230208",
+  "lastSendMessage": "b-961624387411255297"
+},{
+  "_id": {
+    "$oid": "60712ff9795f8d24d8c4eae3"
+  },
+  "name": "Gai Cesar",
+  "resId": "12380912",
+  "hotelId": "2441",
+  "checkIn": "15.08.2020",
+  "checkOut": "22.08.2020",
+  "phone": "3598885999189",
+  "flightArrival": "BUC6210",
+  "flightDeparture": "BUC6209",
+  "hasTransfer": true
+},{
+  "_id": {
+    "$oid": "60712ff9795f8d24d8c4eae4"
+  },
+  "name": "Ilarionescu Deran",
+  "resId": "213458",
+  "hotelId": "6637",
+  "checkIn": "15.08.2020",
+  "checkOut": "19.08.2020",
+  "phone": "3598885999189",
+  "flightArrival": "LZ6210",
+  "flightDeparture": "LZ6209",
+  "hasTransfer": true
+}]

@@ -32,12 +32,8 @@ const getNavigations = (isLogged, user) => {
   ];
   const guestLinks = [
     {
-      title: 'Villas',
-      path: '/',
-    },
-    {
       title: 'Login',
-      path: '/login',
+      path: '/admin',
     },
     {
       title: 'Register',

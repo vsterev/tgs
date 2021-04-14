@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const contactController = require('../controllers/contact');
+const voteController = require('../controllers/vote');
 const auth = require('../utils/auth');
 const router = Router();
 
@@ -13,11 +14,13 @@ router.get('/checkOut-message-bulkSms2/:date', auth(), contactController.get.che
 // router.get('/bulk-sms/message/info/:messageId', auth(), contactController.get.bulckMessageInfo);
 // router.get('/bulk-sms/profile', auth(), contactController.get.bulckProfile);
 // router.post('/bulk-sms/manual-send', auth(), contactController.post.bulckManualSend);
+router.get('/get-reservation/:resId', contactController.get.getRes);
 router.get('/checkIn-message-contact-check/:date', auth(), contactController.get.checkCheckInContacts);
 router.get('/checkOut-message-contact-check/:date', auth(), contactController.get.checkCheckOutContacts);
 router.get('/all-without-planned/transsfer/:date', auth(), contactController.get.getAllWatingTransfer);
 router.get('/contacts/test', auth(), contactController.get.testIncludeArr);
 router.post('/update', auth(), contactController.post.update);
+router.post('/reservation/vote', voteController.post.vote);
 router.post('/update-many', auth(), contactController.post.updateMany);
 router.post('/update-many-array', auth(), contactController.post.updataArrayContacts);
 router.post('/checkout', auth(), contactController.post.checkOut);

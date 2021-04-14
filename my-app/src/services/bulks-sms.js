@@ -1,6 +1,7 @@
+import config from './config'
 const BulkSmsService = {
   check: (id, token) => {
-    return fetch(`http://localhost:4000/bulkSms/message/info/${id}`, {
+    return fetch(`${config.backEndUrl}/bulkSms/message/info/${id}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -11,7 +12,7 @@ const BulkSmsService = {
       .catch((e) => console.log(e));
   },
   profile: (token) => {
-    return fetch(`http://localhost:4000/bulkSms/profile`, {
+    return fetch(`${config.backEndUrl}/bulkSms/profile`, {
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
     })
@@ -22,7 +23,7 @@ const BulkSmsService = {
       });
   },
   manualSend: (data, token) => {
-    return fetch(`http://localhost:4000/bulkSms/manual-send`, {
+    return fetch(`${config.backEndUrl}/bulkSms/manual-send`, {
       body: JSON.stringify(data),
       method: 'POST',
       headers: { 'Content-type': 'application/json', Authorization: token },

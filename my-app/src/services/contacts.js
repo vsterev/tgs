@@ -1,6 +1,7 @@
+import config from './config'
 const ContactsService = {
   listAll: (token) => {
-    return fetch('http://localhost:4000', {
+    return fetch(`${config.backEndUrl}`, {
       // body: JSON.stringify(data),
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
@@ -11,8 +12,20 @@ const ContactsService = {
         e.json();
       });
   },
+  reservationInfo: (resId) => {
+    return fetch(`${config.backEndUrl}/get-reservation/${resId}`, {
+      // body: JSON.stringify(data),
+      method: 'GET',
+      headers: { 'Content-type': 'application/json' },
+    })
+      .then((res) => res.json())
+      .catch((e) => {
+        console.error(e);
+        e.json();
+      });
+  },
   checkOut: (data, token) => {
-    return fetch('http://localhost:4000/checkout', {
+    return fetch(`${config.backEndUrl}/checkout`, {
       body: JSON.stringify(data),
       method: 'POST',
       headers: { 'Content-type': 'application/json', Authorization: token },
@@ -24,7 +37,7 @@ const ContactsService = {
       });
   },
   checkIn: (data, token) => {
-    return fetch('http://localhost:4000/checkin', {
+    return fetch(`{config.backEndUrl}/checkin`, {
       body: JSON.stringify(data),
       method: 'POST',
       headers: { 'Content-type': 'application/json', Authorization: token },
@@ -36,7 +49,7 @@ const ContactsService = {
       });
   },
   checkInCheck: (date, token) => {
-    return fetch(`http://localhost:4000/checkIn-message-contact-check/${date}`, {
+    return fetch(`${config.backEndUrl}/checkIn-message-contact-check/${date}`, {
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
     })
@@ -47,7 +60,7 @@ const ContactsService = {
       });
   },
   // bulkSmsProfile: (token) => {
-  //   return fetch(`http://localhost:4000/bulk-sms/profile`, {
+  //   return fetch(`${config.backEndUrl}/bulk-sms/profile`, {
   //     method: 'GET',
   //     headers: { 'Content-type': 'application/json', Authorization: token },
   //   })
@@ -58,7 +71,7 @@ const ContactsService = {
   //     });
   // },
   checkOutCheck: (date, token) => {
-    return fetch(`http://localhost:4000/checkOut-message-contact-check/${date}`, {
+    return fetch(`${config.backEndUrl}/checkOut-message-contact-check/${date}`, {
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
     })
@@ -69,7 +82,8 @@ const ContactsService = {
       });
   },
   welcomeSendMessage: (date, token) => {
-    return fetch(`http://localhost:4000/checkIn-message-bulkSms2/${date}`, {
+    // return fetch(`${config.backEndUrl}/checkIn-message-bulkSms2/${date}`, {
+    return fetch(`${config.backEndUrl}/linkMobility/checkIn-message/${date}`, {
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
     })
@@ -80,19 +94,19 @@ const ContactsService = {
       });
   },
   goodByeSendMessage: (date, token) => {
-    return fetch(`http://localhost:4000/checkOut-message-bulkSms2/${date}`, {
+    // return fetch(`${config.backEndUrl}/checkOut-message-bulkSms2/${date}`, {
+    return fetch(`${config.backEndUrl}/linkMobility/checkOut-message/${date}`, {
       method: 'GET',
       headers: { 'Content-type': 'application/json', Authorization: token },
     })
       .then((res) => res.json())
       .catch((e) => {
-        console.log('vasko');
         e.json();
       });
   },
 
   updateMany: (data, token) => {
-    return fetch('http://localhost:4000/update-many-array', {
+    return fetch(`${config.backEndUrl}/update-many-array`, {
       body: JSON.stringify(data),
       method: 'POST',
       headers: { 'Content-type': 'application/json', Authorization: token },

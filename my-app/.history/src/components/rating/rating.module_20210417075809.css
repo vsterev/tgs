@@ -1,0 +1,31 @@
+/* .formRating {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+} */
+body {
+  /* background-image: url('https://c0.wallpaperflare.com/preview/569/939/748/top-view-photography-of-seashore.jpg'); */
+  background-color: rgb(255 240 184 / 36%);
+  background-size: auto;
+}
+.formRating {
+  margin: 0 auto;
+  max-width: 300px;
+  padding: 40px;
+  border-radius: 20px;
+  background-color: rgb(240 248 253 / 86%);
+}
+selection.rating {
+  margin: 10px auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  align-items: center;
+}
+.rating {
+  width: 100%;
+}
+Button.rating {
+  margin-top: 10px;
+}

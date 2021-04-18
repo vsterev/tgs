@@ -1,0 +1,20 @@
+/* .formRating {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+} */
+body {
+  background-image: url('https://cdn11.bigcommerce.com/s-rmev5pqxuw/images/stencil/728x728/products/267/3453/Sea-Shells-beach-Sand-Landscape-Medley-Collection-1__58561.1591697024.jpg?c=1');
+}
+.formRating {
+  /* color: white; */
+  margin: 0 auto;
+  max-width: 300px;
+  padding: 40px;
+  /* background-color: white; */
+  /* opacity: 0.8; */
+  border-radius: 20px;
+  /* border: 2px; */
+  background-color: rgb(240 248 253 / 86%);
+}

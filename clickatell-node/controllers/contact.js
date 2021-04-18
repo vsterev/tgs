@@ -1,4 +1,4 @@
-const { contactModel, repModel } = require('../models');
+const { contactModel, repModel, userVoteModel } = require('../models');
 const { bulkSend, bulkSmsCheck } = require('../utils/bulk-sms');
 const { bulkSmsProfile } = require('../utils/bulk-sms/');
 const { bulkSendMany } = require('../utils/bulk-sms');
@@ -8,6 +8,7 @@ const { reject } = require('bluebird');
 const hotel = require('../models/hotel');
 const contact = require('../models/contact');
 const { parseStringPromise } = require('xml2js');
+var crypto = require('crypto');
 module.exports = {
   get: {
     all: (req, res) => {
@@ -29,7 +30,16 @@ module.exports = {
     },
     getRes: (req, res) => {
       const { resId } = req.params;
-      console.log(resId);
+      // var mykey = crypto.createCipher('aes-128-cbc', 'tgs2014app');
+      // var mystr = mykey.update('abc', 'utf8', 'hex');
+      // mystr += mykey.final('hex');
+      // console.log(mystr); //34feb914c099df25794bf9ccb85bea72
+
+      // var mykey = crypto.createDecipher('aes-128-cbc', 'tgs2014app');
+      // var mystr = mykey.update('34feb914c099df25794bf9ccb85bea72', 'hex', 'utf8');
+      // mystr += mykey.final('utf8');
+
+      // console.log(mystr); //abc
       contactModel
         .findOne({ resId })
         .populate({
@@ -38,8 +48,13 @@ module.exports = {
           populate: { path: 'resortId', model: 'Resort', select: 'name' },
         })
         .then((contact) => {
+          const userVoted = userVoteModel.findOne({ resId });
           // console.log(contact);
-          res.status(200).json({ status: true, contact });
+          return Promise.all([contact, userVoted]);
+          // res.status(200).json({ status: true, contact });
+        })
+        .then(([contact, userVoted]) => {
+          res.status(200).json({ status: true, contact, userVoted });
         })
         .catch((err) => {
           res.status(404).json({ status: false, msg: err });

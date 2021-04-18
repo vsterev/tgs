@@ -1,0 +1,10 @@
+.formRating {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+body {
+  background-image: url('https://i.pinimg.com/564x/ce/c2/cd/cec2cdb74f865c9c96f151919a171dcc.jpg');
+  background-repeat: no-repeat, repeat;
+}

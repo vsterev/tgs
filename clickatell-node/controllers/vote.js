@@ -56,6 +56,7 @@ module.exports = {
           res.status(400).json(b);
         });
     },
+    checkIsVoted: (req, res) => {},
     hotelsRating: (req, res) => {
       const data = req.body;
       console.log;

@@ -7,7 +7,7 @@ const bulkSmsSend = function (rep, contact) {
     method: 'POST',
     body: JSON.stringify({
       to: contact.phone,
-      body: `Welcome to Bulgaria ${contact.name}.Solvex is your DMC - please visit https://www.solvex.bg/${contact._id} for more info.Travel with smile :-). Your rep is ${rep[0].familyName} on phone ${rep[0].phone}`,
+      body: `Welcome to Bulgaria ${contact.name}.Solvex is your DMC - please visit https://www.solvex.bg/${contact.resId} for more info.Travel with smile :-). Your rep is ${rep[0].familyName} on phone ${rep[0].phone}`,
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ const bulkSmsSend = function (rep, contact) {
     },
   })
     .then((res) => console.log(res.json()))
-    .then((rs) => contactModel.findOneAndUpdate({ _id: contact.resId }, { firstSendMessage: rs[0].id }))
+    .then((rs) => contactModel.findOneAndUpdate({ resId: contact.resId }, { firstSendMessage: rs[0].id }))
     .catch((err) => console.log(err));
 };
 module.exports = bulkSmsSend;

@@ -20,7 +20,8 @@ router.get('/checkOut-message-contact-check/:date', auth(), contactController.ge
 router.get('/all-without-planned/transsfer/:date', auth(), contactController.get.getAllWatingTransfer);
 router.get('/contacts/test', auth(), contactController.get.testIncludeArr);
 router.post('/update', auth(), contactController.post.update);
-router.post('/reservation/vote', voteController.post.vote);
+router.post('/vote/reservation', auth(), voteController.post.vote);
+router.post('/vote/all', auth(), voteController.post.usersVotes);
 router.post('/update-many', auth(), contactController.post.updateMany);
 router.post('/update-many-array', auth(), contactController.post.updataArrayContacts);
 router.post('/checkout', auth(), contactController.post.checkOut);

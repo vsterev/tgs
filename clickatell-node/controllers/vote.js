@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const { userVoteModel, hotelRatingModel, contactModel } = require('../models');
 module.exports = {
   post: {
@@ -5,7 +6,7 @@ module.exports = {
       //   const user = req.user;
       const rating = req.body;
       contactModel
-        .findOne({ resId: rating.resId })
+        .findOne({ _id: rating.resId })
         .then((reservation) => {
           if (!reservation) {
             res.status(401).json({ err: 'no reservation with this number' });
@@ -56,10 +57,12 @@ module.exports = {
           res.status(400).json(b);
         });
     },
-    checkIsVoted: (req, res) => {},
-    hotelsRating: (req, res) => {
-      const data = req.body;
-      console.log;
+    usersVotes: (req, res) => {
+      userVoteModel
+        .find()
+        .populate([{ path: 'hotelId', model: 'Hotel', select: 'name' }])
+        .then((vots) => res.status(200).json(vots))
+        .catch(console.log);
     },
   },
 };

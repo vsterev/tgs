@@ -99,15 +99,15 @@ module.exports = {
             }
             if (contact.reps.length === 0) {
               console.log(
-                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact._id.toString}!`
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
               );
               noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
             }
             if (!contact.phone) {
               console.log(
-                `Reservation id - ${contact._id.toString()} has no phone attached - no info send to sms bulk system !`
+                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           return Promise.all([data, noRepsAdded, noPhones, contacts]);
@@ -200,17 +200,15 @@ module.exports = {
             }
             if (contact.reps.length === 0) {
               console.log(
-                `Hotel  ${contact.hotelId.name} / ${
-                  contact.hotelId._id
-                } - has no rep attached - no info send via messaging system for reservation - ${contact._id.toString()}!`
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
               );
               noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
             }
             if (!contact.phone) {
               console.log(
-                `Reservation id - ${contact._id.toString()} has no phone attached - no info send to sms bulk system !`
+                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           return Promise.all([data, noPhones, noRepsAdded, contacts]);

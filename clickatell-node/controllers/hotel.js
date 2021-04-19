@@ -19,10 +19,35 @@ module.exports = {
       const { hotelId } = req.params;
       hotelRatingModel
         .findOne({ hotelId })
-        // .lean()
+        .lean()
         .populate([
-          // { path: 'hotelId', model: 'Hotel', select: 'name' },
-          { path: 'comments.resId', model: 'Contact' },
+          { path: 'hotelId', model: 'Hotel', select: 'name' },
+          { path: 'comments.resId', model: 'Contact', select: ['name', 'checkIn'] },
+        ])
+        .then((result) => {
+          if (result) {
+            console.log(result.staff);
+            const averagRate = Math.round(
+              (+result.staff +
+                +result.cleanliness +
+                +result.comfort +
+                +result.location +
+                +result.food +
+                +result.value) /
+                6
+            );
+            res.status(200).json({ rating: result, averagRate, maxRate: 10 });
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    allHotelsRaing: (req, res) => {
+      hotelRatingModel
+        .find()
+        .lean()
+        .populate([
+          { path: 'hotelId', model: 'Hotel', select: 'name' },
+          { path: 'comments.resId', model: 'Contact', select: ['name', 'checkIn'] },
         ])
         .then((result) => {
           if (result) {

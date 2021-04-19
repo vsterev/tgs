@@ -5,11 +5,11 @@ const contactSchema = new mongoose.Schema({
     type: String,
     // required: [true, 'Please enter a title !'],
   },
-  _id: {
+  resId: {
     type: String,
-    // required: [true, 'Please enter a reservation Number !'],
+    required: [true, 'Please enter a reservation Number !'],
     //     maxlength: [50, 'It is allow maximum 50 characters!']
-    // unique: true,
+    unique: true,
     // index: true,
   },
   hotelId: {

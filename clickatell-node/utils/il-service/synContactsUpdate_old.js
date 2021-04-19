@@ -16,7 +16,7 @@ MongoClient.connect(url, function (err, client) {
       //   { resId: contact.resId },
       //   { $set: { phone: contact.phone, checkIn: contact.checkIn, checkOut: contact.checkOut } }
       // )
-      .findOneAndUpdate({ _id: contact.resId }, [
+      .findOneAndUpdate({ resId: contact.resId }, [
         {
           $set: {
             phone: contact.phone,

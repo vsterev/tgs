@@ -41,7 +41,7 @@ module.exports = {
 
       // console.log(mystr); //abc
       contactModel
-        .findOne({ _id: resId })
+        .findOne({ resId })
         .populate({
           path: 'hotelId',
           model: 'Hotel',
@@ -109,9 +109,7 @@ module.exports = {
                 if (rep[0]) {
                   console.log(rep[0].familyName, contact.hotelId, contact.name);
                   sendMes(
-                    `Welcome to Bulgaria ${
-                      contact.name
-                    }.Solvex is your DMC - please visit https://www.solvex.bg/${contact._id.toString()} for more info.Travel with smile :-).
+                    `Welcome to Bulgaria ${contact.name}.Solvex is your DMC - please visit https://www.solvex.bg/${contact.resId} for more info.Travel with smile :-).
                     Your rep is ${rep[0].familyName} on phone ${rep[0].phone}`,
                     contact.phone,
                     'sms'
@@ -254,17 +252,15 @@ module.exports = {
             }
             if (contact.reps.length === 0) {
               console.log(
-                `Hotel  ${contact.hotelId.name} / ${
-                  contact.hotelId._id
-                } - has no rep attached - no info send via messaging system for reservation - ${contact._id.toString()}!`
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
               );
               noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
             }
             if (!contact.phone) {
               console.log(
-                `Reservation id - ${contact._id.toString()} has no phone attached - no info send to sms bulk system !`
+                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           return Promise.all([data, noRepsAdded, noPhones, contacts]);
@@ -274,7 +270,7 @@ module.exports = {
           if (noRepsAdded.length + noPhones.length > 0) {
             sendEmail(
               'TGS - Error sending SMS via Bulk',
-              ` Dear admin, <br
+              ` Dear admin, <br>
               You receive this message, because there are any reservations that have not receive SMS welcome noifications.<br>
               ${noRepsAdded.length > 0 ? `Hotel/s: ${noRepsAdded.join(', ')} do not have any rep attached. \<br>` : ''}
               ${
@@ -357,17 +353,15 @@ module.exports = {
             }
             if (contact.reps.length === 0) {
               console.log(
-                `Hotel  ${contact.hotelId.name} / ${
-                  contact.hotelId._id
-                } - has no rep attached - no info send via messaging system for reservation - ${contact._id.toString()}!`
+                `Hotel  ${contact.hotelId.name} / ${contact.hotelId._id} - has no rep attached - no info send to sms bulk system for reservation - ${contact.resId}!`
               );
               noRepsAdded.push(contact.hotelId._id + ' - ' + contact.hotelId.name);
             }
             if (!contact.phone) {
               console.log(
-                `Reservation id - ${contact._id.toString()} has no phone attached - no info send via messaging sytem system !`
+                `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           return Promise.all([data, noPhones, noRepsAdded, contacts]);
@@ -440,7 +434,7 @@ module.exports = {
           const contactMessageSended = [];
           const contactHotels = contacts.map((contact) => {
             if (!!contact.firstSendMessage) {
-              contactMessageSended.push(contact._id.toString());
+              contactMessageSended.push(contact.resId);
             }
             return contact.hotelId._id;
           });
@@ -491,7 +485,7 @@ module.exports = {
               // console.log(
               //   `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               // );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           res.status(200).json({
@@ -512,7 +506,7 @@ module.exports = {
           const contactMessageSended = [];
           const contactHotels = contacts.map((contact) => {
             if (!!contact.lastSendMessage) {
-              contactMessageSended.push(contact._id.toString());
+              contactMessageSended.push(contact.resId);
             }
             return contact.hotelId._id;
           });
@@ -563,7 +557,7 @@ module.exports = {
               // console.log(
               //   `Reservation id - ${contact.resId} has no phone attached - no info send to sms bulk system !`
               // );
-              noPhones.push(contact._id.toString());
+              noPhones.push(contact.resId);
             }
           });
           res.status(200).json({
@@ -672,7 +666,7 @@ module.exports = {
       const { reservations, time, comment } = req.body;
       contactModel
         // .updateMany({ resId: { $in: reservations }, hasTransfer: true }, { time, comment })
-        .updateMany({ _id: { $in: reservations } }, { time, comment })
+        .updateMany({ resId: { $in: reservations } }, { time, comment })
         .then((upd) => res.status(200).json(`updated ${upd.nModified} from ${upd.n} matches`))
         .catch((err) => res.status(400).json(err));
     },

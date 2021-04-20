@@ -34,7 +34,7 @@ module.exports = {
                 +result.location +
                 +result.food +
                 +result.value) /
-                6
+                (+result.votes * 6)
             );
             res.status(200).json({ rating: result, averagRate, maxRate: 10 });
           }

@@ -23,6 +23,9 @@ const hotelRatingSchema = new mongoose.Schema({
   value: {
     type: Number,
   },
+  votes: {
+    type: Number,
+  },
   comments: [{ comment: { type: String }, resId: { type: String, ref: 'Contact' } }],
 });
 

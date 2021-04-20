@@ -23,6 +23,7 @@ module.exports = {
                   location: +rating.location,
                   food: +rating.food,
                   value: +rating.value,
+                  votes: 1,
                   comments: [{ comment: rating.hotelComment, resId: rating.resId }],
                 });
               }
@@ -36,6 +37,7 @@ module.exports = {
                     location: +rating.location,
                     food: +rating.food,
                     value: +rating.value,
+                    votes: +1,
                   },
                   $push: {
                     comments: { comment: rating.hotelComment, resId: rating.resId },
@@ -60,7 +62,10 @@ module.exports = {
     usersVotes: (req, res) => {
       userVoteModel
         .find()
-        .populate([{ path: 'hotelId', model: 'Hotel', select: 'name' }])
+        .populate([
+          { path: 'hotelId', model: 'Hotel', select: 'name' },
+          { path: 'resId', model: 'Contact', select: ['name', '_id', 'checkIn', 'phone'] },
+        ])
         .then((vots) => res.status(200).json(vots))
         .catch(console.log);
     },

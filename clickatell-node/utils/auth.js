@@ -1,6 +1,6 @@
 const jwt = require('./jwt');
 const { userModel, tokenBlacklistModel } = require('../models');
-
+const limiter = require('./limiter');
 function auth() {
   return function (req, res, next) {
     // const token = req.cookies['auth-cookie'];

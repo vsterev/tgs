@@ -5,6 +5,7 @@ module.exports = {
     vote: (req, res) => {
       //   const user = req.user;
       const rating = req.body;
+      //str.split('').map(v=>String.fromCharCode(v.charCodeAt(0)*2-50)).join('')
       contactModel
         .findOne({ _id: rating.resId })
         .then((reservation) => {

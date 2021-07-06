@@ -1,6 +1,7 @@
 const getCities = require('../utils/il-service/getCities');
 const getHotels = require('../utils/il-service/getHotels');
 const getMinPriceFunc = require('../utils/il-service/getMinPrices2_partials');
+const getHotelServiceFunc = require('../utils/il-service/searchHotelServices');
 const { resortModel, hotelModel } = require('../models');
 const resort = require('../models/resort');
 
@@ -59,6 +60,24 @@ module.exports = {
       const arrPrices = [];
       const { checkIn, checkOut, pageSize, cityKey, rowIndexFrom, cacheGuid, serviceType, adults, children } = req.body;
       getMinPriceFunc(pageSize, checkIn, checkOut, cityKey, rowIndexFrom, cacheGuid, serviceType, adults, children)
+        .then(([prices, cacheGuid, totalCount, pageSize, pageIndex, isLastPage, requeststr, result]) => {
+          prices.forEach((el, i) => {
+            const hotel = el.HotelName[0]['_'];
+            const roomType = el.RdName[0]['_'];
+            const accommodation = el.AcName[0]['_'];
+            const price = +el.Cost[0]['_'] + +el.AddHotsCost[0]['_'];
+            arrPrices.push({ id: i + 1, hotel, roomType, accommodation, price });
+          });
+          res
+            .status(200)
+            .json({ requeststr, result, cacheGuid, totalCount, pageSize, pageIndex, isLastPage, arrPrices });
+        })
+        .catch((err) => console.log(err));
+    },
+    getHotelServices: (req, res) => {
+      const arrPrices = [];
+      const { checkIn, checkOut, pageSize, cityKey, rowIndexFrom, cacheGuid, serviceType, adults, children } = req.body;
+      getHotelServiceFunc(pageSize, checkIn, checkOut, cityKey, rowIndexFrom, cacheGuid, serviceType, adults, children)
         .then(([prices, cacheGuid, totalCount, pageSize, pageIndex, isLastPage, requeststr, result]) => {
           prices.forEach((el, i) => {
             const hotel = el.HotelName[0]['_'];

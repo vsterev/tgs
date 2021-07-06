@@ -2,6 +2,7 @@ const { Router } = require('express');
 const contactController = require('../controllers/contact');
 const voteController = require('../controllers/vote');
 const auth = require('../utils/auth');
+const limiter = require('../utils/limiter');
 const router = Router();
 
 router.get('/', auth(), contactController.get.all);
@@ -14,7 +15,7 @@ router.get('/checkOut-message-bulkSms2/:date', auth(), contactController.get.che
 // router.get('/bulk-sms/message/info/:messageId', auth(), contactController.get.bulckMessageInfo);
 // router.get('/bulk-sms/profile', auth(), contactController.get.bulckProfile);
 // router.post('/bulk-sms/manual-send', auth(), contactController.post.bulckManualSend);
-router.get('/get-reservation/:resId', contactController.get.getRes);
+router.get('/get-reservation/:cryptedResId', limiter(15, 4), contactController.get.getRes);
 router.get('/checkIn-message-contact-check/:date', auth(), contactController.get.checkCheckInContacts);
 router.get('/checkOut-message-contact-check/:date', auth(), contactController.get.checkCheckOutContacts);
 router.get('/all-without-planned/transsfer/:date', auth(), contactController.get.getAllWatingTransfer);

@@ -15,8 +15,9 @@ const minPrice = (pageSize, checkIn, checkOut, cityKey, rowIndexFrom, cacheGuid,
   // const cacheGuid = '';
   console.log(serviceType);
   const url = {
-    eval: 'http://evaluation.solvex.bg/iservice/integrationservice.asmx',
-    prod: 'http://iservice.solvex.bg/IntegrationService.asmx',
+    eval: 'https://evaluation.solvex.bg/iservice/integrationservice.asmx',
+    prod: 'https://iservice.solvex.bg/IntegrationService.asmx',
+    eval2: 'http://192.168.10.50/integrationservice.asmx',
   };
   // const service = url['eval'];
   const service = url[serviceType];

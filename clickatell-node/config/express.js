@@ -7,6 +7,19 @@ const routes = require('../routes');
 // const routes = require('../routes')
 // const cookieParser = require('cookie-parser');
 // const courseController = require('../controllers/course');
+const rateLimit = require('express-rate-limit');
+
+// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+// see https://expressjs.com/en/guide/behind-proxies.html
+// app.set('trust proxy', 1);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3,
+  message: 'Too many accounts created from this IP, please try again after an hour',
+});
+
+// only apply to requests that begin with /api/
 
 module.exports = (app) => {
   app.use(
@@ -30,9 +43,8 @@ module.exports = (app) => {
 
   //TODO: Setup the static files
   app.use('/static', express.static('static'));
-  // // app.use('/', routes);
   app.use('/', routes.contacts);
-  // app.use('/home', routes.home);
+  // app.use('/user-vote', apiLimiter);
   app.use('/user', routes.user);
   app.use('/hotels', routes.hotel);
   app.use('/resorts', routes.resort);

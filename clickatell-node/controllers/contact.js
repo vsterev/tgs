@@ -8,6 +8,7 @@ const { reject } = require('bluebird');
 const hotel = require('../models/hotel');
 const contact = require('../models/contact');
 const { parseStringPromise } = require('xml2js');
+const { crypter, decrypter } = require('../utils/numberCrypter');
 var crypto = require('crypto');
 module.exports = {
   get: {
@@ -29,7 +30,8 @@ module.exports = {
         });
     },
     getRes: (req, res) => {
-      const { resId } = req.params;
+      const { cryptedResId } = req.params;
+      const resId = decrypter(cryptedResId);
       // var mykey = crypto.createCipher('aes-128-cbc', 'tgs2014app');
       // var mystr = mykey.update('abc', 'utf8', 'hex');
       // mystr += mykey.final('hex');
@@ -39,7 +41,6 @@ module.exports = {
       // var mystr = mykey.update('34feb914c099df25794bf9ccb85bea72', 'hex', 'utf8');
       // mystr += mykey.final('utf8');
 
-      // console.log(mystr); //abc
       contactModel
         .findOne({ _id: resId })
         .populate({
@@ -351,7 +352,13 @@ module.exports = {
           contacts.map((contact) => {
             if ((contact.reps.length > 0) & !!contact.phone) {
               //da dobavia uslovie za comment tyabva da e tuk
-              const body = `Dear ${contact.name} - your departure date is ${contact.checkOut} the transfer time is at ${contact.time} h - ${contact.comment}. Your DMC Solvex wishes you a safe trip!  `;
+              const body = `Dear ${contact.name} - your departure date is ${contact.checkOut} the transfer time is at ${
+                contact.time
+              } h - ${
+                contact.comment
+              }. Your DMC Solvex wishes you a safe trip! Please vote your holiday http://localhost:3000/user-vote/${crypter(
+                contact._id
+              )}  `;
               const to = contact.phone;
               data.push({ to, body });
             }

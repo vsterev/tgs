@@ -40,6 +40,7 @@ const UserRatings = () => {
                   <td>{vote.resId._id}</td>
                   <td>
                     <Link
+                      to="/#"
                       onClick={() =>
                         window.open(
                           `/admin/hotel-rating/${vote.hotelId._id}`,
